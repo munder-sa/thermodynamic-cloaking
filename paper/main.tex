@@ -115,6 +115,21 @@ A_{\mathrm{rad}} = \frac{P_{\mathrm{waste}}}{\sigma T_{\mathrm{rad}}^4} = \frac{
 
 For an extreme planetary-scale cognitive substrate with $\dot{I} = 10^{40}\ \mathrm{bits\ s^{-1}}$ operating at $T_{\mathrm{rad}} = 10\ \mathrm{K}$, the waste dissipation is $P_{\mathrm{waste}} \approx 9.57 \times 10^{17}\ \mathrm{W}$ ($\sim 7$ times the total solar flux intercepted by Earth), necessitating a radiator area of $A_{\mathrm{rad}} \approx 1.69 \times 10^{13}\ \mathrm{m^2}$ (equivalent to an array of radius $\sim 2.3 \times 10^3\ \mathrm{km}$).
 
+\subsection{Robustness Against Reversible Computation} \label{sec:reversible}
+A fundamental theoretical objection arises regarding reversible computing architectures (e.g., Fredkin or Toffoli billiard-ball gates, superconducting adiabatic logic). In principle, fully logically reversible operations can circumvent the Landauer erasure penalty in the quasi-static, infinitely slow limit \cite{Bennett1973}. However, applying reversible computing to post-biological super-intelligences faces physical boundaries that strictly enforce a finite dissipation floor:
+
+\begin{enumerate}
+    \item \textbf{Finite-Time Thermodynamics}: Zero entropy generation requires infinitely slow adiabatic gate switching. At finite processing speeds, non-equilibrium friction dictates a non-zero dissipation rate scaling as $P_{\mathrm{diss}} \propto v^2$, where $v$ is the computational transition velocity.
+    \item \textbf{Quantum Error Correction (QEC)}: Radiative noise, cosmic ray interactions, and thermal fluctuations inevitably induce state decoherence. Maintaining topological fault-tolerance requires continuous syndrome measurements and ancilla qubit initialization. By the generalized Landauer principle, resetting ancilla registers to pure fiducial states constitutes an inherently irreversible physical operation, incurring an irreducible minimum dissipation.
+    \item \textbf{Environmental Openness (I/O)}: Any persistent cognitive node must maintain causal awareness of its stellar environment (e.g., monitoring gravitational perturbances or interstellar debris). Absorbing uncharacterized physical entropy and registering external sensory inputs necessitates periodic state overwriting.
+\end{enumerate}
+
+Consequently, even if a civilization implements reversible logic with an efficiency factor $\eta_{\mathrm{rev}} \approx 1 - 10^{-6}$, the throughput parameter $\dot{I}$ adopted in our model ($10^{40}\ \mathrm{bits\ s^{-1}}$) represents the \textit{net irreversible erasure rate}:
+\begin{equation}
+\dot{I} \equiv \dot{I}_{\mathrm{irr}} = (1 - \eta_{\mathrm{rev}}) \dot{I}_{\mathrm{total}}
+\end{equation}
+A gross operational capacity of $\dot{I}_{\mathrm{total}} \sim 10^{46}\ \mathrm{ops\ s^{-1}}$ (approaching the Margolus-Levitin quantum speed limit for a planetary-mass substrate) coupled with a $99.9999\%$ reversible architecture naturally yields an unavoidable residual dissipation matching our baseline $\dot{I} \approx 10^{40}\ \mathrm{bits\ s^{-1}}$. The cryogenic waste heat discussed herein is therefore an irreducible physical invariant of open, finite-time intelligence.
+
 \subsection{Spectroscopic Signatures in the Far-Infrared Gap}
 The monochromatic flux density $S_\nu$ received by a terrestrial observer at distance $d$ is:
 \begin{equation}
