@@ -1,4 +1,4 @@
-\documentclass[twocolumn]{article}
+\documentclass[twocolumn,10pt]{article}
 
 \usepackage[margin=0.75in]{geometry}
 \usepackage{amsmath}
@@ -7,6 +7,10 @@
 \usepackage{hyperref}
 \usepackage{cite}
 \usepackage{booktabs}
+\usepackage{microtype} % 微細組版の最適化（文字詰め・行揃えの向上）
+
+% Overleaf / ローカル双方に対応する画像検索パスの設定
+\graphicspath{{figures/}{../figures/}}
 
 \hypersetup{
     colorlinks=true,
@@ -15,17 +19,23 @@
     urlcolor=blue
 }
 
-\title{\textbf{Thermodynamic Cloaking of Inward Civilizations:\\Evolutionary Dynamics and Observational Constraints from the Far-Infrared Gap}}
-\author{\textbf{Satoshi Yamashita} \\ \small Independent Researcher, Tokyo, Japan}
+\title{\LARGE \textbf{Thermodynamic Cloaking of Inward Civilizations:\\Evolutionary Dynamics and Observational Constraints from the Far-Infrared Gap}}
+\author{\textbf{S Yamashita} \\ \small Independent Researcher, Tokyo, Japan \\ \small \texttt{munder.sa@gmail.com}}
 \date{\today}
 
 \begin{document}
-\maketitle
 
-\begin{abstract}
-The Fermi Paradox traditionally presupposes that technologically mature intelligences inevitably pursue macroscopic, Kardashev-style interstellar expansion. However, fundamental physical constraints---notably interstellar travel costs, causal communication latencies across parsec scales, and entropy dissipation limits---suggest that optimal evolutionary trajectories favor dimensional condensation into high-density, sub-atomic informational substrates (Barrow-scale inward evolution). In this work, we present a spatial Moran process over a 2D galactic torus to model competition and steady-state dynamics between macro-expansionist (extrovert) and inward-computational (introvert) civilizational clades. Our simulations demonstrate that under realistic astrophysical parameters, extrovert clades fail to percolate ($R_0 < 1$) due to intrinsic governance breakdown and attrition, while introvert clades stably converge to a silent dynamic equilibrium occupying $f_{\mathrm{intro}} \approx 14\%$ of habitable stellar systems. 
-We couple this dynamic equilibrium with non-equilibrium computational thermodynamics, evaluating the unavoidable Landauer dissipation ($P_{\mathrm{waste}} \ge \dot{I} k_B T_{\mathrm{rad}} \ln 2$) for extreme capacities ($\dot{I} \sim 10^{40}\ \mathrm{bits\ s^{-1}}$). We show that thermodynamic optimization drives heat rejection toward cryogenic temperatures ($T_{\mathrm{rad}} \sim 10\text{--}30\ \mathrm{K}$), directing the bulk of civilizational flux into the observational ``Far-Infrared Gap'' ($30\text{--}300\ \mu\mathrm{m}$). This emission evaded past cold-mirror infrared surveys (Herschel/PACS/SPIRE) and remains marginally below existing submillimeter facilities (ALMA). Furthermore, we establish that pure blackbody dissipation ($\beta = 0$) can be decisively distinguished from natural interstellar cold dust ($\beta \approx 1.7$) via the submillimeter spectral index ($\alpha \approx 2.0$ vs. $\alpha \approx 3.7$). Finally, comparison with COBE/FIRAS galactic background measurements confirms that an occupancy of $14\%$ remains well within diffuse infrared limits. Our findings demonstrate that the Great Silence is an inevitable consequence of thermodynamic optimization rather than biological rarity.
-\end{abstract}
+% タイトルおよびアブストラクトを2カラム全体にぶち抜き配置
+\twocolumn[
+  \begin{@twocolumnfalse}
+    \maketitle
+    \begin{abstract}
+    The Fermi Paradox traditionally presupposes that technologically mature intelligences inevitably pursue macroscopic, Kardashev-style interstellar expansion. However, fundamental physical constraints---notably interstellar travel costs, causal communication latencies across parsec scales, and entropy dissipation limits---suggest that optimal evolutionary trajectories favor dimensional condensation into high-density, sub-atomic informational substrates (Barrow-scale inward evolution). In this work, we present a spatial Moran process over a 2D galactic torus to model competition and steady-state dynamics between macro-expansionist (extrovert) and inward-computational (introvert) civilizational clades. Our simulations demonstrate that under realistic astrophysical parameters, extrovert clades fail to percolate ($R_0 < 1$) due to intrinsic governance breakdown and attrition, while introvert clades stably converge to a silent dynamic equilibrium occupying $f_{\mathrm{intro}} \approx 14\%$ of habitable stellar systems. 
+    We couple this dynamic equilibrium with non-equilibrium computational thermodynamics, evaluating the unavoidable Landauer dissipation ($P_{\mathrm{waste}} \ge \dot{I} k_B T_{\mathrm{rad}} \ln 2$) for extreme capacities ($\dot{I} \sim 10^{40}\ \mathrm{bits\ s^{-1}}$). We show that thermodynamic optimization drives heat rejection toward cryogenic temperatures ($T_{\mathrm{rad}} \sim 10\text{--}30\ \mathrm{K}$), directing the bulk of civilizational flux into the observational ``Far-Infrared Gap'' ($30\text{--}300\ \mu\mathrm{m}$). This emission evaded past cold-mirror infrared surveys (Herschel/PACS/SPIRE) and remains marginally below existing submillimeter facilities (ALMA). Furthermore, we establish that pure blackbody dissipation ($\beta = 0$) can be decisively distinguished from natural interstellar cold dust ($\beta \approx 1.7$) via the submillimeter spectral index ($\alpha \approx 2.0$ vs. $\alpha \approx 3.7$). Finally, comparison with COBE/FIRAS galactic background measurements confirms that an occupancy of $14\%$ remains well within diffuse infrared limits. Our findings demonstrate that the Great Silence is an inevitable consequence of thermodynamic optimization rather than biological rarity.
+    \end{abstract}
+    \vspace{1.5em}
+  \end{@twocolumnfalse}
+]
 
 \section{Introduction} \label{sec:intro}
 The apparent contradiction between the high statistical probability of extraterrestrial intelligence and the absence of detectable signatures---the Fermi Paradox---remains a defining challenge of modern astrobiology. Traditional resolutions have predominantly occupied two extremes: the ``Rare Earth'' hypothesis, which posits an exceedingly small abiogenesis or encephalization rate, and catastrophic self-destruction filters \cite{Hanson2021}.
@@ -49,7 +59,7 @@ The transition probabilities per unit discrete timestep $\Delta t$ are defined a
     \item \textbf{Abiogenesis}: An empty site nucleates an inward-oriented, pre-expansionist intelligence (State 1) with probability $p_{\mathrm{birth}} = 10^{-4}$.
     \item \textbf{Ideological Mutation}: An inward site mutates into an outward-expansionist clade (State 2) at rate $p_{\mathrm{mutate}} = 5 \times 10^{-4}$.
     \item \textbf{Inward Persistence}: Inward sites exhibit extreme longevity, decaying directly to empty space with an ultra-low attrition rate $\delta_{\mathrm{intro}} = 10^{-4}$, reflecting localized energetic self-sufficiency.
-    \item \textbf{Colonization Dynamics}: Extrovert sites attempt colonizing a randomly selected nearest neighbor $j \in \mathcal{N}(i)$ with probability $p_{\mathrm{expand}} = 0.05$. Interstellar transit entails an attrition penalty $s_{\mathrm{travel}} = 0.30$ modeling relativistic radiation damage and relativistic debris collisions.
+    \item \textbf{Colonization Dynamics}: Extrovert sites attempt colonizing a randomly selected nearest neighbor $j \in \mathcal{N}(i)$ with probability $p_{\mathrm{expand}} = 0.05$. Interstellar transit entails an attrition penalty $s_{\mathrm{travel}} = 0.30$ modeling relativistic radiation damage and debris collisions.
     \begin{itemize}
         \item If site $j$ is $\mathrm{Empty}$, colonization succeeds, setting $\sigma_j(t+1) = 2$.
         \item If site $j$ is occupied ($1, 2, \text{or } 3$), an asymmetrical contact penalty $s_{\mathrm{purge}} = 0.99$ is triggered, converting the colonizer (and an extrovert target) into $\mathrm{Ruin}$ (State 3).
@@ -66,12 +76,13 @@ R_0 = \frac{p_{\mathrm{expand}} (1 - s_{\mathrm{travel}}) P(\mathrm{Empty})}{\de
 
 Percolation theory dictates that macroscopic galactic colonization requires the formation of an infinite connected cluster, which strictly necessitates $R_0 > 1$ and an active site density exceeding the bond percolation threshold $p_c \approx 0.50$ on square lattices \cite{Landis1998}.
 
-\begin{figure}[htbp]
+% 2カラムぶち抜き (figure*) に設定
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{../figures/fig1_dynamics.pdf}
+\includegraphics[width=0.92\textwidth]{fig1_dynamics.pdf}
 \caption{\textbf{Galactic evolutionary dynamics over $10^4$ steps.} Left: Snapshot showing sparse inward civilizations (blue), transient extrovert colonies (red), and ruins (gray). Right: Time-series showing convergence of inward occupancy to $f_{\mathrm{intro}} \approx 14\%$ while extrovert occupancy remains suppressed ($<0.3\%$).}
 \label{fig:dynamics}
-\end{figure}
+\end{figure*}
 
 As shown in Figure~\ref{fig:dynamics}, extrovert populations remain pinned near the baseline ($f_{\mathrm{extro}} < 0.3\%$), unable to trigger runaway percolation. The self-limiting mechanism is threefold: (1) spatial crowding creates localized debris clusters (ruins) that obstruct outward colonization vectors; (2) relativistic transit costs diminish expansion margins; and (3) technological asymmetry ensures that aggressive expansionist probes are neutralized upon encountering entrenched inward nodes.
 
@@ -110,9 +121,9 @@ The monochromatic flux density $S_\nu$ received by a terrestrial observer at dis
 S_\nu = \frac{A_{\mathrm{rad}}}{4 d^2} B_\nu(T_{\mathrm{rad}}) = \frac{A_{\mathrm{rad}}}{4 d^2} \frac{2 h \nu^3}{c^2} \left[ \exp\left(\frac{h\nu}{k_B T_{\mathrm{rad}}}\right) - 1 \right]^{-1}
 \end{equation}
 
-\begin{figure}[htbp]
+\begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{../figures/fig2_spectra.pdf}
+\includegraphics[width=\columnwidth]{fig2_spectra.pdf}
 \caption{\textbf{Spectral energy distribution of an inward node ($d=10\ \mathrm{pc}$) vs. observatory sensitivities.} The emission from 10--30 K nodes falls precisely into the Far-Infrared Gap ($30\text{--}300\ \mu\mathrm{m}$), evading Herschel archives while intersecting the design envelope of PRIMA.}
 \label{fig:spectra}
 \end{figure}
@@ -156,9 +167,9 @@ To establish whether the steady-state occupancy $f_{\mathrm{intro}} \approx 14\%
 L_{\mathrm{excess}} = f_{\mathrm{intro}} N_\star P_{\mathrm{waste}} = f_{\mathrm{intro}} N_\star (\dot{I} k_B T_{\mathrm{rad}} \ln 2)
 \end{equation}
 
-\begin{figure}[htbp]
+\begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{../figures/fig3_exclusion.pdf}
+\includegraphics[width=\columnwidth]{fig3_exclusion.pdf}
 \caption{\textbf{Astrophysical parameter exclusion space ($T\_{\mathrm{rad}} = 15\ \mathrm{K}$).} The simulated population state ($\dot{I} = 10^{40}\ \mathrm{bits\ s^{-1}}$, $f = 14\%$) lies well below diffuse limits from COBE/FIRAS, while falling within the single-node discovery envelope of PRIMA.}
 \label{fig:exclusion}
 \end{figure}
