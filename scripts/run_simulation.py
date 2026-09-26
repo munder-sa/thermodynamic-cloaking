@@ -109,5 +109,5 @@ if __name__ == "__main__":
     axes[1].grid(True, alpha=0.3)
 
     plt.tight_layout()
-    plt.savefig("figures/fig1_dynamics.pdf", bbox_inches="tight")
+    plt.savefig("figures/fig1_dynamics.pdf", bbox_inches="tight"); plt.savefig("figures/fig1_dynamics.png", dpi=300, bbox_inches="tight")
     print("Saved: figures/fig1_dynamics.pdf")

@@ -67,7 +67,7 @@ def make_figure_spectra():
     ax.grid(True, which="both", ls=":", alpha=0.4)
     ax.legend(loc="upper right", frameon=True, framealpha=0.9)
     plt.tight_layout()
-    plt.savefig("figures/fig2_spectra.pdf", bbox_inches="tight")
+    plt.savefig("figures/fig2_spectra.pdf", bbox_inches="tight"); plt.savefig("figures/fig2_spectra.png", dpi=300, bbox_inches="tight")
     print("Saved: figures/fig2_spectra.pdf")
 
 def make_figure_exclusion():
@@ -95,7 +95,7 @@ def make_figure_exclusion():
     ax.grid(True, which="both", ls=":", alpha=0.4)
     ax.legend(loc="lower left", frameon=True, framealpha=0.9)
     plt.tight_layout()
-    plt.savefig("figures/fig3_exclusion.pdf", bbox_inches="tight")
+    plt.savefig("figures/fig3_exclusion.pdf", bbox_inches="tight"); plt.savefig("figures/fig3_exclusion.png", dpi=300, bbox_inches="tight")
     print("Saved: figures/fig3_exclusion.pdf")
 
 if __name__ == "__main__":
