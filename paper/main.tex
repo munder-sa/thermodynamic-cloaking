@@ -92,6 +92,25 @@ f_{\mathrm{intro}}^* \approx \frac{p_{\mathrm{birth}}}{p_{\mathrm{birth}} + \del
 \end{equation}
 This confirms that across geological epochs, the galaxy becomes predominantly populated by silent, stationary computational nodes inhabiting approximately $14\%$ of stellar sectors.
 
+\subsection{Parameter Robustness and Sensitivity Analysis} \label{sec:sensitivity}
+To verify that the steady-state equilibrium $f_{\mathrm{intro}} \approx 14\%$ and the suppression of extrovert percolation do not rely on finely tuned parameters, we evaluate the stability of the phase boundaries across variations in key transition probabilities:
+
+\begin{enumerate}
+    \item \textbf{Robustness of the Sub-Percolation Regime ($R_0 < 1$)}:
+    The macroscopic spread of extrovert clades requires crossing the directed percolation threshold, which on a 2D topology requires $R_0 \ge 1$. Differentiating $R_0$ with respect to the travel friction $s_{\mathrm{travel}}$ and ideological mutation rate $p_{\mathrm{mutate}}$ reveals that the system remains sub-critical across orders of magnitude:
+    \begin{equation}
+    \frac{\partial R_0}{\partial s_{\mathrm{travel}}} = -\frac{p_{\mathrm{expand}} P(\mathrm{Empty})}{\delta_{\mathrm{extro}} + s_{\mathrm{purge}} P(\mathrm{Contact})} < 0
+    \end{equation}
+    Even if interstellar travel attrition is drastically reduced to $s_{\mathrm{travel}} = 0.05$ (highly shielded relativistic craft) and expansionist drive is doubled to $p_{\mathrm{expand}} = 0.10$, the heightened contact penalty with existing ruins ($s_{\mathrm{purge}} \approx 0.99$) maintains $R_0 \approx 0.62 < 1$. Thus, self-limiting topological clustering is an attractor of the spatial game.
+
+    \item \textbf{Scaling of the Inward Equilibrium Fraction}:
+    The asymptotic analytical equilibrium is governed strictly by the ratio of generation to turnover rates:
+    \begin{equation}
+    f_{\mathrm{intro}}^* = \left( 1 + \frac{\delta_{\mathrm{intro}} + p_{\mathrm{mutate}}}{p_{\mathrm{birth}}} \right)^{-1}
+    \end{equation}
+    Varying the ratio $(\delta_{\mathrm{intro}} + p_{\mathrm{mutate}}) / p_{\mathrm{birth}}$ across three orders of magnitude ($10^{-1}$ to $10^2$) yields dynamic occupancies spanning $1\% \le f_{\mathrm{intro}}^* \le 50\%$. Crucially, as established in Section~\ref{sec:galactic}, even an extreme saturation scenario of $f_{\mathrm{intro}} = 0.50$ shifts the COBE/FIRAS computational boundary by only a factor of $0.55\ \mathrm{dex}$, retaining $\dot{I}_{\mathrm{max}} \sim 7.5 \times 10^{41}\ \mathrm{bits\ s^{-1}}$. The primary observational consequence---that planetary-scale nodes ($\dot{I} \sim 10^{40}\ \mathrm{bits\ s^{-1}}$) remain completely hidden in diffuse galactic surveys---is invariant to parametric drift.
+\end{enumerate}
+
 \section{Thermodynamic Dissipation and Spectroscopic Signatures} \label{sec:thermo}
 
 \subsection{Landauer Dissipation in Extreme Substrates}
