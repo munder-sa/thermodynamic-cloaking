@@ -115,6 +115,8 @@ thermodynamic-cloaking/
 ├── requirements.txt           # Python dependencies
 ├── LICENSE                    # MIT (Code) & CC-BY-4.0 (Manuscript & Figures)
 └── README.md
+```
+
 ## 🚀 Quickstart & Reproduction
 Ensure you have Python 3.10+ installed:
 git clone [https://github.com/munder-sa/thermodynamic-cloaking.git](https://github.com/munder-sa/thermodynamic-cloaking.git)
