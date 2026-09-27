@@ -1,0 +1,34 @@
+{
+  "prima_235": {
+    "classical_5sigma_confusion_ujy": 46000,
+    "model_flux_at_10pc_ujy": 29.81564538113732,
+    "conditional_distance_pc": 0.25459108467064745,
+    "conditional_distance_AU": 52513.18075180467,
+    "beam_fwhm_arcsec_2025_design": 27.9,
+    "source": "https://academic.oup.com/mnras/article/532/2/1966/7696741"
+  },
+  "budget": {
+    "galactic_W": 3.828e+33,
+    "assumed_f": 0.14,
+    "assumed_N_stars": 100000000000.0,
+    "per_node_W": 2.7342857142857142e+23,
+    "per_node_solar_luminosities": 0.0007142857142857143,
+    "temperatures": {
+      "15": {
+        "energy_per_bit_J": 1.435489442539362e-22,
+        "per_node_erasure_limit_bits_s": 1.9047759135370573e+45,
+        "dex_above_benchmark": 5.2798438906475145
+      },
+      "20": {
+        "energy_per_bit_J": 1.913985923385816e-22,
+        "per_node_erasure_limit_bits_s": 1.428581935152793e+45,
+        "dex_above_benchmark": 5.154905154039215
+      }
+    }
+  },
+  "parallax_arcsec": {
+    "1000": 206.264806247,
+    "10000": 20.6264806247,
+    "52600": 3.9213841491825097
+  }
+}
