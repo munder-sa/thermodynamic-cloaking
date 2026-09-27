@@ -1,0 +1,20 @@
+test_birth_before_parent_death_and_no_same_step_cascade (test_models.DynamicsTests.test_birth_before_parent_death_and_no_same_step_cascade) ... ok
+test_conflict_kills_both_expansionists (test_models.DynamicsTests.test_conflict_kills_both_expansionists) ... ok
+test_conflict_resolution_independent_of_order (test_models.DynamicsTests.test_conflict_resolution_independent_of_order) ... ok
+test_invalid_probabilities (test_models.DynamicsTests.test_invalid_probabilities) ... ok
+test_mutation_priority (test_models.DynamicsTests.test_mutation_priority) ... ok
+test_reproducibility_and_state_conservation (test_models.DynamicsTests.test_reproducibility_and_state_conservation) ... ok
+test_two_state_stationary_balance (test_models.DynamicsTests.test_two_state_stationary_balance) ... ok
+test_bolometric_flux_and_background_contrast (test_models.PhysicsTests.test_bolometric_flux_and_background_contrast) ... ok
+test_conditional_limits (test_models.PhysicsTests.test_conditional_limits) ... ok
+test_flux_regressions_and_scaling (test_models.PhysicsTests.test_flux_regressions_and_scaling) ... ok
+test_invalid_input (test_models.PhysicsTests.test_invalid_input) ... ok
+test_landauer_and_area_regressions (test_models.PhysicsTests.test_landauer_and_area_regressions) ... ok
+test_planck_integrates_to_stefan_boltzmann (test_models.PhysicsTests.test_planck_integrates_to_stefan_boltzmann) ... ok
+test_spectral_slope (test_models.PhysicsTests.test_spectral_slope) ... ok
+test_wien_and_rj_limits (test_models.PhysicsTests.test_wien_and_rj_limits) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.104s
+
+OK

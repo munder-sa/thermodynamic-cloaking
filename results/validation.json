@@ -1,0 +1,22 @@
+{
+  "upstream_url": "https://github.com/munder-sa/thermodynamic-cloaking",
+  "upstream_commit": "958f8744706d985eb8f879fafea81a661720ea40",
+  "audit_date": "2026-09-27",
+  "python": "3.12.10",
+  "numpy": "2.5.3",
+  "matplotlib": "3.11.2",
+  "scipy": "1.18.1",
+  "checks": {
+    "tests": 0,
+    "upstream_audit": 0,
+    "figure_generation": 0,
+    "latex_static_citations_labels_environments_braces_selfcontained": "pass; NOT a compilation"
+  },
+  "manuscript_compilation": {
+    "status": "unverified",
+    "attempts": 2,
+    "error": "Unable to find standard directories for platform",
+    "editor_open_requested": true
+  },
+  "simulations": "2 parameter sets x 10 seeds x 20000 steps; first 10000 discarded"
+}

@@ -1,0 +1,27 @@
+{
+  "original_empty_target_overwrite_cases": [
+    {
+      "source": [
+        1,
+        1
+      ],
+      "target": [
+        1,
+        2
+      ],
+      "target_state": 1
+    },
+    {
+      "source": [
+        1,
+        2
+      ],
+      "target": [
+        1,
+        1
+      ],
+      "target_state": 2
+    }
+  ],
+  "original_planck_max_relative_difference_at_benchmark_wavelengths": 1.6431300764452317e-14
+}
