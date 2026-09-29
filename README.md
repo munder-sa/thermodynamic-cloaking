@@ -59,7 +59,7 @@ For a planetary-scale substrate with $\dot{I} = 10^{40}\ \mathrm{bits\ s^{-1}}$ 
 
 ### 3. Breaking Degeneracy with Natural Interstellar Dust
 Natural interstellar dust emits via a modified blackbody (graybody) envelope:
-$$S_\nu^{\mathrm{dust}} \propto \nu^\beta B_\nu(T_{\mathrm{dust}}) \quad (\beta \approx 1.5\text{--}2.0)$$
+$S_\nu^{\mathrm{dust}} \propto \nu^\beta B_\nu(T_{\mathrm{dust}}) \quad (\beta \approx 1.5\text{--}2.0)$$
 In the submillimeter Rayleigh-Jeans limit ($h\nu \ll k_B T$), the spectral index $\alpha \equiv d\ln S_\nu / d\ln\nu$ breaks this degeneracy:
 
 | Source Type | Emissivity Index $\beta$ | RJ Spectral Index $\alpha = 2 + \beta$ | ALMA Photometric Diagnostic |
