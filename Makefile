@@ -1,9 +1,9 @@
 PYTHON ?= python3
 S = scripts
 
-.PHONY: all test figures simulations paper checksums clean
+.PHONY: all test figures simulations robustness paper checksums clean
 
-all: figures simulations checksums
+all: figures simulations robustness checksums
 
 test:
 	$(PYTHON) -m unittest discover -s tests -v
@@ -16,6 +16,10 @@ figures:
 simulations:
 	cd $(S) && $(PYTHON) run_simulation.py
 	cd $(S) && $(PYTHON) compare_updates.py
+
+# Long: lattice-size, parameter-sweep and inward-vulnerability experiments.
+robustness:
+	cd $(S) && $(PYTHON) robustness.py all
 
 paper:
 	cd paper && latexmk -pdf -interaction=nonstopmode main.tex

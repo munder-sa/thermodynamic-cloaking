@@ -5,6 +5,13 @@ over simultaneous spontaneous birth; any ruin proposal wins over survival.
 An old expansionist may launch once in its final step. Incoming colonies
 act only next step. The chosen rules are model assumptions, not empirical
 astrophysical rates. Run this file from any working directory.
+
+Optional inward vulnerability (default off, reproducing earlier results
+draw-for-draw): when a conflict occurs at an old inward target, the target
+is also lost with probability v_intro. With invasion='ruin' it becomes a
+remnant and the source is also ruined (mutual destruction, as for two
+expansionists). With invasion='capture' it becomes an expanding site and
+the source survives the encounter; a failed capture still ruins the source.
 """
 from pathlib import Path
 import argparse
@@ -28,18 +35,23 @@ class GalacticEcosystem:
     def __init__(self, grid_size=60, p_birth=0.0001, p_mutate=0.0005,
                  p_expand=0.05, s_travel_cost=0.3, s_purge=0.99,
                  decay_introvert=0.0001, decay_extrovert=0.05,
-                 decay_ruin=0.005, seed=0):
+                 decay_ruin=0.005, v_intro=0.0, invasion='ruin', seed=0):
         if not isinstance(grid_size, int) or grid_size < 3:
             raise ValueError('grid_size must be an integer >=3 (8 distinct neighbors)')
         self.L = grid_size
         self.params = dict(p_birth=p_birth, p_mutate=p_mutate, p_expand=p_expand,
                            s_travel_cost=s_travel_cost, s_purge=s_purge,
                            decay_introvert=decay_introvert, decay_extrovert=decay_extrovert,
-                           decay_ruin=decay_ruin)
+                           decay_ruin=decay_ruin, v_intro=v_intro)
         for name, value in self.params.items():
             if not np.isfinite(value) or not 0 <= value <= 1:
                 raise ValueError(f'{name} must lie in [0,1]')
             setattr(self, name, value)
+        if invasion not in ('ruin', 'capture'):
+            raise ValueError("invasion must be 'ruin' or 'capture'")
+        self.invasion = invasion
+        if v_intro > 0:
+            self.params['invasion'] = invasion
         self.seed = seed
         self.rng = np.random.default_rng(seed)
         self.grid = np.zeros((self.L, self.L), dtype=np.int8)
@@ -65,8 +77,16 @@ class GalacticEcosystem:
         target_states = old[targets]
         colonies = targets[arrives & (target_states == self.EMPTY)]
         conflicts = arrives & (target_states != self.EMPTY) & (rand(len(sources)) < self.s_purge)
-        ruin_targets.extend(sources[conflicts])
         ruin_targets.extend(targets[conflicts & (target_states == self.EXTROVERT)])
+        if self.v_intro > 0:
+            # Drawn only when enabled, so v_intro=0 keeps the original stream.
+            lost = conflicts & (target_states == self.INTROVERT) & (rand(len(sources)) < self.v_intro)
+            if self.invasion == 'capture':
+                colonies = np.concatenate([colonies, targets[lost]])
+                conflicts = conflicts & ~lost
+            else:
+                ruin_targets.extend(targets[lost])
+        ruin_targets.extend(sources[conflicts])
         self.grid = resolve_proposals(local.reshape(self.grid.shape), colonies, ruin_targets)
         for state, name in enumerate(self.history):
             self.history[name].append(float(np.count_nonzero(self.grid == state) / self.grid.size))

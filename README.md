@@ -32,7 +32,16 @@ Benchmark: 10<sup>40</sup> erased bits/s, Landauer bound saturated, ideal blackb
 
 ### Population model
 
-A 60×60 periodic stochastic cellular automaton (empty / inward / expanding / remnant, 8 neighbors). With the chosen, uncalibrated rates, the inward fraction is about 14% under both synchronous and random-sequential updating, and every single-founder expansion lineage died out within 500 steps (800 trials). This depends on assumed rates and protective asymmetries. It is not a Galactic abundance estimate.
+A periodic stochastic cellular automaton (empty / inward / expanding / remnant, 8 neighbors) with chosen, uncalibrated rates. Robustness experiments (October 2026) found:
+
+- **Lattice size:** occupancies are stable from 15×15 to 240×240; for L ≥ 60 the inward fraction stays at 13.88–13.90% (baseline).
+- **The ~14% is an input, not an outcome.** Across a one-at-a-time sweep of all eight rates, the inward fraction stays within 92–100% of b/(b+ℓ), i.e. it is set by the assumed emergence and loss rates of inward sites.
+- **Expansionist extinction comes from the conflict rule.** Contact with *any* occupied site — including a lineage's own colonies and inert remnants — kills the source with probability 0.99. With that rule no lineage survived, even when the contact-free reproduction bound was 45. With conflict probability ≤ 0.1 and frequent launches, over 80% of lineages survive, and with no conflict expanding sites outnumber inward ones 3.6 to 1.
+- **Protecting inward sites from invasion barely matters** under baseline rates: letting conflicts destroy or capture them lowers the inward fraction only from 13.9% to about 12.8%.
+
+<p align="center">
+  <img src="figures/fig9_conflict.png" width="94%" alt="Conflict lethality versus occupancy and lineage survival" />
+</p>
 
 <p align="center">
   <img src="figures/fig4_update_comparison.png" width="94%" alt="Update-scheme comparison, spatial correlation and lineage survival" />
@@ -51,8 +60,9 @@ scripts/run_simulation.py      Seeded synchronous automaton -> fig1, simulation_
 scripts/compare_updates.py     Async comparison, correlations, lineages -> fig4, update_comparison.json
 scripts/make_paper_figures.py  Spectra, flux tables, conditional budget -> fig2, fig3
 scripts/observational_constraints.py  Confusion, parallax, per-node budget -> fig5
+scripts/robustness.py          Lattice size, parameter sweep, conflict, inward vulnerability -> fig6-9
 scripts/audit_upstream.py      Reproduces the first-draft update-order bug against an old checkout
-tests/                         20 unit and numerical tests
+tests/                         23 unit and numerical tests
 results/                       Machine-readable outputs
 figures/                       PDF and PNG figures
 docs/                          Audit and revision notes (Japanese)
@@ -67,9 +77,9 @@ git clone https://github.com/munder-sa/thermodynamic-cloaking.git
 cd thermodynamic-cloaking
 pip install -r requirements.txt
 
-make test      # 20 tests, a few seconds
+make test      # 23 tests, a few seconds
 make figures   # fast outputs: fig2, fig3, fig5 and numerical tables
-make all       # also reruns the long simulations (fig1, fig4); tens of minutes
+make all       # also reruns the long simulations and robustness runs (fig1, fig4, fig6-9); over an hour on 2 cores
 make paper     # builds paper/main.pdf (needs latexmk)
 ```
 
@@ -93,4 +103,4 @@ See [`CITATION.cff`](CITATION.cff), or:
 
 S Yamashita ([@munder-sa](https://github.com/munder-sa)) · munder.sa@gmail.com
 
-Issues and pull requests are welcome, especially on lattice-size dependence, parameter sweeps, and injection–recovery tests in realistic far-infrared maps.
+Issues and pull requests are welcome, especially on lineage-aware conflict rules, physical propagation delays, and injection–recovery tests in realistic far-infrared maps.
