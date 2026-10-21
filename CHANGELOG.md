@@ -1,5 +1,19 @@
 # Changelog
 
+## Robustness experiments — October 2026
+
+- Added `scripts/robustness.py` and figures 6–9: lattice sizes 15–240, a
+  one-at-a-time sweep of all eight rates plus a (p, delta_X) grid, a
+  conflict-lethality grid, and an optional inward-vulnerability rule.
+- New model option `v_intro` with `invasion='ruin'|'capture'` in both update
+  schemes. The default `v_intro=0` reproduces all earlier results draw-for-draw.
+- Findings: results are stable in lattice size; the ~14% inward fraction is set
+  by the inward emergence/loss rates; lineage extinction is driven by the
+  near-certain lethality of any contact (s_purge=0.99), not by travel cost;
+  removing inward protection has a small effect at baseline rates.
+- Manuscript: new Section 3 and revised abstract and limitations.
+- Tests: 23 (added vulnerability-rule tests).
+
 ## Third draft — October 2026
 
 - Applied the second-draft code and manuscript changes that had been committed

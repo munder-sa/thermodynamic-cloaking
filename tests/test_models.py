@@ -100,11 +100,41 @@ class DynamicsTests(unittest.TestCase):
         sim = GalacticEcosystem(grid_size=60,p_birth=.1,p_mutate=0,decay_introvert=.2,seed=4).run(1200)
         self.assertLess(abs(np.mean(sim.history['introvert'][200:])-1/3),.005)
 
+    def test_default_vulnerability_preserves_stream(self):
+        a = GalacticEcosystem(grid_size=12,p_birth=.05,p_mutate=.05,seed=7).run(200)
+        b = GalacticEcosystem(grid_size=12,p_birth=.05,p_mutate=.05,v_intro=0.,
+                              invasion='capture',seed=7).run(200)
+        np.testing.assert_array_equal(a.grid,b.grid)
+
+    def _attack(self, invasion, v):
+        sim = GalacticEcosystem(grid_size=3,p_birth=0,p_mutate=0,decay_introvert=0,
+                                p_expand=1,s_travel_cost=0,s_purge=1,decay_extrovert=0,
+                                decay_ruin=0,v_intro=v,invasion=invasion)
+        sim.grid[:]=1
+        sim.grid[1,1]=2
+        sim.step()
+        return sim.grid
+
+    def test_inward_vulnerability_outcomes(self):
+        g = self._attack('ruin',1.)
+        self.assertEqual(g[1,1],3)
+        self.assertEqual(np.count_nonzero(g==3),2)
+        self.assertEqual(np.count_nonzero(g==1),7)
+        g = self._attack('capture',1.)
+        self.assertEqual(g[1,1],2)
+        self.assertEqual(np.count_nonzero(g==2),2)
+        self.assertEqual(np.count_nonzero(g==3),0)
+        g = self._attack('ruin',0.)
+        self.assertEqual(np.count_nonzero(g==1),8)
+        self.assertEqual(g[1,1],3)
+
     def test_invalid_probabilities(self):
         with self.assertRaises(ValueError):
             GalacticEcosystem(p_expand=1.1)
         with self.assertRaises(ValueError):
             GalacticEcosystem(grid_size=2)
+        with self.assertRaises(ValueError):
+            GalacticEcosystem(invasion='merge')
 
 
 if __name__ == '__main__':

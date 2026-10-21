@@ -66,6 +66,21 @@ class AsyncTests(unittest.TestCase):
         self.assertEqual(sim.grid[1,1],3)
         self.assertEqual(np.count_nonzero(sim.grid==2),1)
 
+    def test_inward_vulnerability_matches_synchronous_rule(self):
+        for invasion,source,target in [('ruin',3,3),('capture',2,2)]:
+            sim=AsynchronousEcosystem(grid_size=3,p_birth=0,p_mutate=0,decay_introvert=0,
+                                      p_expand=1,s_travel_cost=0,s_purge=1,decay_extrovert=0,
+                                      decay_ruin=0,v_intro=1,invasion=invasion)
+            sim.grid[:]=1
+            sim.grid[1,1]=2
+            sim.rebuild()
+            sim.event()
+            self.assertEqual(sim.grid[1,1],source)
+            changed=[c for c in range(9) if c!=4 and sim.grid.flat[c]!=1]
+            self.assertEqual(len(changed),1)
+            self.assertEqual(sim.grid.flat[changed[0]],target)
+            self.assertEqual(set(sim.pools[target]),set(np.flatnonzero(sim.grid.ravel()==target)))
+
     def test_pool_integrity_and_reproducibility(self):
         a=AsynchronousEcosystem(grid_size=8,p_birth=.2,p_mutate=.1,seed=3).run(100)
         b=AsynchronousEcosystem(grid_size=8,p_birth=.2,p_mutate=.1,seed=3).run(100)

@@ -68,9 +68,14 @@ class AsynchronousEcosystem(GalacticEcosystem):
                 if target_state == 0:
                     self.change(target, 2)
                 elif self.rng.random() < self.s_purge:
-                    self.change(cell, 3)
-                    if target_state == 2:
-                        self.change(target, 3)
+                    lost = (target_state == 1 and self.v_intro > 0
+                            and self.rng.random() < self.v_intro)
+                    if lost and self.invasion == 'capture':
+                        self.change(target, 2)
+                    else:
+                        self.change(cell, 3)
+                        if target_state == 2 or lost:
+                            self.change(target, 3)
             if dies:
                 self.change(cell, 3)
 
