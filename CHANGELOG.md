@@ -1,4 +1,25 @@
-# Second-draft change log — 27 September 2026
+# Changelog
+
+## Third draft — October 2026
+
+- Applied the second-draft code and manuscript changes that had been committed
+  only as `revision.patch`: seeded, order-independent `run_simulation.py`,
+  revised `make_paper_figures.py`, and the second-draft `main.tex`. Before this,
+  the test suite and `compare_updates.py` failed on import.
+- Rebuilt `paper/main.tex` as the third draft (the original third-draft source
+  was not in the repository), adding: synchronous vs random-sequential
+  comparison, spatial and temporal correlations, the single-founder lineage
+  experiment, the PRIMAger 235 µm confusion limit (Donnellan et al. 2024),
+  the beam FWHM vs Airy dark-ring distinction, outer-Solar-System vs 10 pc
+  parallax regimes, ALMA Band 9/10 coverage of the 10–15 K peaks, a general
+  heat balance with auxiliary power and directional irradiation, model-comparison
+  identification criteria, and the per-node budget at 15 and 20 K.
+- Rewrote README to match the corrected results; removed the withdrawn claims.
+- Added `Makefile`, GitHub Actions tests, and `CITATION.cff`.
+- Moved Japanese audit notes to `docs/`; removed `revision.patch` and the
+  obsolete first-draft `fig3_exclusion` figure; regenerated `SHA256SUMS.txt`.
+
+## Second draft — 27 September 2026
 
 - Corrected radiator area by eight orders of magnitude and distinguished total
   emitting area, one-face disk radius, and spherical radius.
