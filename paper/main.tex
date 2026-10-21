@@ -1,251 +1,721 @@
-\documentclass[twocolumn,10pt]{article}
-
+\documentclass[10pt,twocolumn]{article}
 \usepackage[margin=0.75in]{geometry}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{graphicx}
-\usepackage{hyperref}
-\usepackage{cite}
-\usepackage{booktabs}
-\usepackage{microtype} % 微細組版の最適化（文字詰め・行揃えの向上）
-
-% Overleaf / ローカル双方に対応する画像検索パスの設定
-\graphicspath{{figures/}{../figures/}}
-
-\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    citecolor=blue,
-    urlcolor=blue
-}
-
-\title{\LARGE \textbf{Thermodynamic Cloaking of Inward Civilizations:\\Evolutionary Dynamics and Observational Constraints from the Far-Infrared Gap}}
-\author{\textbf{S Yamashita} \\ \small Independent Researcher, Tokyo, Japan \\ \small \texttt{munder.sa@gmail.com}}
-\date{\today}
-
+\usepackage{amsmath,amssymb,booktabs,microtype}
+\usepackage[colorlinks=true,allcolors=blue,breaklinks=true]{hyperref}
+\usepackage{url}
+\setlength{\emergencystretch}{2em}
+\newcommand{\Iirr}{\dot I_{\mathrm{irr}}}
+\newcommand{\Trad}{T_{\mathrm{rad}}}
+\newcommand{\Tb}{T_{\mathrm{b}}}
+\newcommand{\ujy}{\mu\mathrm{Jy}}
+\title{\textbf{Thermodynamic Cloaking of Inward Civilizations:}\\
+An Illustrative Population Model and Far-Infrared/Submillimeter Forecasts}
+\author{S Yamashita\\\small Independent Researcher, Tokyo, Japan\\
+\small\texttt{munder.sa@gmail.com}}
+\date{Third draft --- October 2026}
+% Standalone source: tables and bibliography are embedded, with no external
+% images, .bib, or .tex dependencies. Recomputed companion figures are supplied
+% in ../figures/ but are not needed to compile this manuscript.
 \begin{document}
+\maketitle
+\begin{abstract}
+Localized computation at low temperature could produce technosignatures
+that are faint in the mid-infrared but detectable in sufficiently deep
+far-infrared or submillimeter observations. We investigate this conditional
+hypothesis with two complementary, phenomenological models: a four-state
+stochastic cellular automaton and an idealized thermal radiator. The
+automaton illustrates how prescribed differences in persistence and
+expansion can maintain a predominantly non-expanding population; its
+parameters are not calibrated to extraterrestrial civilizations. Mean
+occupancies are similar under synchronous and random-sequential updating
+for the two parameter sets examined, and isolated expansion lineages
+started from a single site all died out within 500 steps. For a
+specified irreversible erasure rate of $10^{40}$ bits s$^{-1}$, saturating
+the Landauer bound at 10 K gives $9.57\times10^{17}$ W and a total emitting
+area of $1.69\times10^{21}$ m$^2$. At 10 pc the corresponding flux densities
+are 0.0993, 29.8, 82.3, and 64.7 $\ujy$ at 100, 235, 450, and
+850 $\mu$m, respectively. The $S_\nu$ maximum lies near 510 $\mu$m,
+outside a nominal 30--300 $\mu$m far-infrared interval. Exact Planck
+spectra, rather than Rayleigh--Jeans slopes, are required in these bands.
+The 235 $\mu$m benchmark at 10 pc is about 1500 times fainter than the
+classical PRIMAger confusion limit, so ordinary single-band blind
+extraction is not supported. We give conditional sensitivity
+requirements and distinguish a heuristic
+Galactic luminosity budget from an empirical foreground constraint.
+These models define testable thermal source populations, but neither
+establish a universal evolutionary outcome nor identify a unique
+resolution of the Fermi paradox.
+\end{abstract}
 
-% タイトルおよびアブストラクトを2カラム全体にぶち抜き配置
-\twocolumn[
-  \begin{@twocolumnfalse}
-    \maketitle
-    \begin{abstract}
-    The Fermi Paradox traditionally presupposes that technologically mature intelligences inevitably pursue macroscopic, Kardashev-style interstellar expansion. However, fundamental physical constraints---notably interstellar travel costs, causal communication latencies across parsec scales, and entropy dissipation limits---suggest that optimal evolutionary trajectories favor dimensional condensation into high-density, sub-atomic informational substrates (Barrow-scale inward evolution). In this work, we present a spatial Moran process over a 2D galactic torus to model competition and steady-state dynamics between macro-expansionist (extrovert) and inward-computational (introvert) civilizational clades. Our simulations demonstrate that under realistic astrophysical parameters, extrovert clades fail to percolate ($R_0 < 1$) due to intrinsic governance breakdown and attrition, while introvert clades stably converge to a silent dynamic equilibrium occupying $f_{\mathrm{intro}} \approx 14\%$ of habitable stellar systems. 
-    We couple this dynamic equilibrium with non-equilibrium computational thermodynamics, evaluating the unavoidable Landauer dissipation ($P_{\mathrm{waste}} \ge \dot{I} k_B T_{\mathrm{rad}} \ln 2$) for extreme capacities ($\dot{I} \sim 10^{40}\ \mathrm{bits\ s^{-1}}$). We show that thermodynamic optimization drives heat rejection toward cryogenic temperatures ($T_{\mathrm{rad}} \sim 10\text{--}30\ \mathrm{K}$), directing the bulk of civilizational flux into the observational ``Far-Infrared Gap'' ($30\text{--}300\ \mu\mathrm{m}$). This emission evaded past cold-mirror infrared surveys (Herschel/PACS/SPIRE) and remains marginally below existing submillimeter facilities (ALMA). Furthermore, we establish that pure blackbody dissipation ($\beta = 0$) can be decisively distinguished from natural interstellar cold dust ($\beta \approx 1.7$) via the submillimeter spectral index ($\alpha \approx 2.0$ vs. $\alpha \approx 3.7$). Finally, comparison with COBE/FIRAS galactic background measurements confirms that an occupancy of $14\%$ remains well within diffuse infrared limits. Our findings demonstrate that the Great Silence is an inevitable consequence of thermodynamic optimization rather than biological rarity.
-    \end{abstract}
-    \vspace{1.5em}
-  \end{@twocolumnfalse}
-]
+\section{Motivation and scope}
+Waste-heat searches test particular assumptions about technological energy
+use \cite{Dyson1960,Wright2014}. Their interpretation depends on luminosity,
+temperature, geometry, abundance, and selection effects. The absence of a
+detected technosignature does not by itself establish either biological
+rarity or a preferred developmental trajectory. Inward development and
+computational concentration have been proposed as alternatives to extensive
+territorial growth \cite{Smart2012}; they remain hypotheses about behavior,
+not consequences of thermodynamics alone.
 
-\section{Introduction} \label{sec:intro}
-The apparent contradiction between the high statistical probability of extraterrestrial intelligence and the absence of detectable signatures---the Fermi Paradox---remains a defining challenge of modern astrobiology. Traditional resolutions have predominantly occupied two extremes: the ``Rare Earth'' hypothesis, which posits an exceedingly small abiogenesis or encephalization rate, and catastrophic self-destruction filters \cite{Hanson2021}.
+Here, ``inward'' means localized, non-expanding activity. It does not imply
+subatomic substrates, disappearance from the observable universe, or
+planet-sized cooling infrastructure. ``Cloaking'' denotes reduced
+detectability for specified surveys, not intentional concealment or an
+absence of radiation. We use 10--30 K as an illustrative radiator
+temperature range. We do not derive that range from an optimization of
+capital cost, radiator mass, heat transport, radiation exposure, or
+computational speed.
 
-A foundational premise underpinning classical Search for Extraterrestrial Intelligence (SETI) paradigms is the assumption of macroscopic expansionism, formalized by the Kardashev scale \cite{Kardashev1964}, originating in Dyson's search for waste megastructures \cite{Dyson1960} and extensively constrained by modern mid-infrared surveys such as $\hat{G}$ \cite{Wright2014}. In this framework, advanced civilizations necessarily harness stellar-to-galactic scale energy budgets, producing conspicuous technosignatures such as Dyson spheres, stellar megastructures, or widespread radio beacons. However, this macro-engineering imperative conflicts with principles of computational thermodynamics and network efficiency. 
+Two calculations are kept distinct. The spatial model explores assumed
+population rules on an abstract lattice. The radiative model predicts the
+spectrum of a specified heat source. There is no calibrated mapping from
+lattice sites to stars, or from a population state to an erasure rate.
+Connecting the two requires additional demographic and engineering
+assumptions. This separation is essential when interpreting a simulated
+fraction as a possible Galactic abundance.
 
-As formulated in the Transcension Hypothesis \cite{Smart2012} and Barrow's micro-dimensional scale \cite{Barrow1998}, the evolutionary trajectory of computation is characterized by progressive spatial, temporal, energetic, and material (STEM) compression. At relativistic distances, light-speed causal delays introduce acute coordination failures, cultural fragmentation, and irreconcilable latency in distributed governance. Consequently, post-biological intelligences face overwhelming evolutionary pressure to miniaturize into localized, ultra-dense substrates operating at quantum or sub-atomic limits.
+\section{A stochastic spatial population model}
+\subsection{States and update rules}
+Consider a periodic $60\times60$ square lattice with eight Moore
+neighbors per site, including diagonal neighbors. Its four states are
+empty ($E$), inward ($I$), expanding ($X$), and inactive remnant ($R$).
+This is a synchronous stochastic cellular automaton, not a Moran
+birth--death process: active population size is variable and no
+fitness-proportional replacement event is specified. Neither the lattice
+spacing nor its discrete timestep is assigned a physical scale.
 
-While qualitative arguments for inward development exist, quantitative frameworks integrating evolutionary game theory with observational astrophysics remain lacking. In this study, we present a unified model combining a spatial Moran process on galactic topologies with non-equilibrium Landauer thermodynamics. We demonstrate why expansionist civilizations naturally self-limit, how inward populations achieve persistent equilibrium, and why their inevitable cryogenic waste heat falls precisely into an observational blind spot of modern astronomy.
-
-\section{Galactic Evolutionary Dynamics} \label{sec:dynamics}
-
-\subsection{Spatial Moran Formulation}
-We model the galactic disk as a two-dimensional toroidal lattice $\Lambda = \mathbb{Z}_L \times \mathbb{Z}_L$ with periodic boundary conditions ($L=60$, representing $3,600$ coarse-grained stellar sectors). Each lattice site $i \in \Lambda$ exists in one of four mutually exclusive states:
-\begin{equation}
-\sigma_i(t) \in \{ \mathrm{Empty}\,(0), \mathrm{Introvert}\,(1), \mathrm{Extrovert}\,(2), \mathrm{Ruin}\,(3) \}
-\end{equation}
-
-The transition probabilities per unit discrete timestep $\Delta t$ are defined as follows:
+Each update reads an unchanged snapshot. The rules are:
 \begin{enumerate}
-    \item \textbf{Abiogenesis}: An empty site nucleates an inward-oriented, pre-expansionist intelligence (State 1) with probability $p_{\mathrm{birth}} = 10^{-4}$.
-    \item \textbf{Ideological Mutation}: An inward site mutates into an outward-expansionist clade (State 2) at rate $p_{\mathrm{mutate}} = 5 \times 10^{-4}$.
-    \item \textbf{Inward Persistence}: Inward sites exhibit extreme longevity, decaying directly to empty space with an ultra-low attrition rate $\delta_{\mathrm{intro}} = 10^{-4}$, reflecting localized energetic self-sufficiency.
-    \item \textbf{Colonization Dynamics}: Extrovert sites attempt colonizing a randomly selected nearest neighbor $j \in \mathcal{N}(i)$ with probability $p_{\mathrm{expand}} = 0.05$. Interstellar transit entails an attrition penalty $s_{\mathrm{travel}} = 0.30$ modeling relativistic radiation damage and debris collisions.
-    \begin{itemize}
-        \item If site $j$ is $\mathrm{Empty}$, colonization succeeds, setting $\sigma_j(t+1) = 2$.
-        \item If site $j$ is occupied ($1, 2, \text{or } 3$), an asymmetrical contact penalty $s_{\mathrm{purge}} = 0.99$ is triggered, converting the colonizer (and an extrovert target) into $\mathrm{Ruin}$ (State 3).
-    \end{itemize}
-    \item \textbf{Extrovert Decay}: Extrovert populations suffer high societal and systemic mortality $\delta_{\mathrm{extro}} = 0.05$, collapsing into ruins.
-    \item \textbf{Ruin Weathering}: Planetary and orbital debris fields weather back to usable stellar sites at rate $\delta_{\mathrm{ruin}} = 5 \times 10^{-3}$.
+\item An empty site proposes inward emergence with probability $b$.
+\item An inward site changes to expanding with probability $m$;
+otherwise it disappears with conditional probability $\delta_I$.
+\item An expanding site attempts one launch with probability $p$,
+selects one of its eight neighbors uniformly, and arrives with
+probability $1-s$. An arrival at an old empty site proposes a new
+expanding site. An arrival at an occupied site triggers a conflict
+with probability $u$, making the source a remnant and, if the target
+was expanding, also making that target a remnant. An inward target
+is unchanged. This protective asymmetry is an explicit assumption.
+\item Each old expanding site independently becomes a remnant with
+probability $\delta_X$, and each old remnant disappears with
+probability $\delta_R$.
 \end{enumerate}
+All proposals are resolved together. Colonization overrides simultaneous
+spontaneous emergence at an old empty target; any remnant proposal
+overrides survival. Multiple identical proposals are merged. An old
+expanding site can launch in its final timestep, including if it is
+destroyed by an incoming conflict. Newly created sites cannot act until
+the next timestep. These conventions remove an implicit traversal-order
+dependence in the first implementation and define a particular revised
+model; alternative simultaneous-event conventions could change outcomes.
 
-\subsection{Percolation Thresholds and Steady-State Convergence}
-The expansion of extrovert civilizations can be formalized via an effective reproduction number $R_0$, defined as the expected number of successful secondary colonies spawned by a single expansionist node over its lifetime $\tau_{\mathrm{extro}} = \delta_{\mathrm{extro}}^{-1}$:
-\begin{equation}
-R_0 = \frac{p_{\mathrm{expand}} (1 - s_{\mathrm{travel}}) P(\mathrm{Empty})}{\delta_{\mathrm{extro}} + s_{\mathrm{purge}} P(\mathrm{Contact})}
-\end{equation}
-
-Percolation theory dictates that macroscopic galactic colonization requires the formation of an infinite connected cluster, which strictly necessitates $R_0 > 1$ and an active site density exceeding the bond percolation threshold $p_c \approx 0.50$ on square lattices \cite{Landis1998}.
-
-% 2カラムぶち抜き (figure*) に設定
-\begin{figure*}[t]
+\begin{table}[ht]
 \centering
-\includegraphics[width=0.92\textwidth]{fig1_dynamics.pdf}
-\caption{\textbf{Galactic evolutionary dynamics over $10^4$ steps.} Left: Snapshot showing sparse inward civilizations (blue), transient extrovert colonies (red), and ruins (gray). Right: Time-series showing convergence of inward occupancy to $f_{\mathrm{intro}} \approx 14\%$ while extrovert occupancy remains suppressed ($<0.3\%$).}
-\label{fig:dynamics}
-\end{figure*}
+\caption{Dimensionless probabilities per update. None is an empirical
+estimate of civilizational behavior.}
+\begin{tabular}{lcc}
+\toprule
+Parameter & Baseline & Higher expansion\\
+\midrule
+$b$ & $10^{-4}$ & same\\
+$m$ & $5\times10^{-4}$ & same\\
+$\delta_I$ & $10^{-4}$ & same\\
+$p$ & 0.05 & 0.10\\
+$s$ & 0.30 & 0.05\\
+$u$ & 0.99 & same\\
+$\delta_X$ & 0.05 & same\\
+$\delta_R$ & 0.005 & same\\
+\bottomrule
+\end{tabular}
+\label{tab:parameters}
+\end{table}
 
-As shown in Figure~\ref{fig:dynamics}, extrovert populations remain pinned near the baseline ($f_{\mathrm{extro}} < 0.3\%$), unable to trigger runaway percolation. The self-limiting mechanism is threefold: (1) spatial crowding creates localized debris clusters (ruins) that obstruct outward colonization vectors; (2) relativistic transit costs diminish expansion margins; and (3) technological asymmetry ensures that aggressive expansionist probes are neutralized upon encountering entrenched inward nodes.
-
-Conversely, inward civilizations stably accumulate, reaching a dynamic equilibrium where nucleation balances subtle secular decay:
+\subsection{Balance relations and limits of a reproduction estimate}
+Write the mean site fractions as $e,i,x,r$, with $e+i+x+r=1$,
+and define $q=p(1-s)$. Ignoring blocking and contact deaths gives an
+upper bound on the expected number of direct colonies produced by one
+expanding site over its lifetime:
 \begin{equation}
-f_{\mathrm{intro}}^* \approx \frac{p_{\mathrm{birth}}}{p_{\mathrm{birth}} + \delta_{\mathrm{intro}} + p_{\mathrm{mutate}}} \approx 0.14
+\mathcal R_{\rm upper}=\frac{q}{\delta_X}.
+\label{eq:upper}
 \end{equation}
-This confirms that across geological epochs, the galaxy becomes predominantly populated by silent, stationary computational nodes inhabiting approximately $14\%$ of stellar sectors.
+This follows from one launch opportunity per step and a geometric lifetime
+of mean $1/\delta_X$, including the final step. Blocking, repeated
+targets, and conflict can only reduce direct reproduction. For the
+baseline $\mathcal R_{\rm upper}=0.70$. Thus extinction of an isolated
+expansion lineage is already favored by the prescribed launch and death
+probabilities; it does not require a derived governance failure.
+For the higher-expansion case the bound is 1.90, so the same argument
+no longer establishes subcritical lineage growth.
 
-\subsection{Parameter Robustness and Sensitivity Analysis} \label{sec:sensitivity}
-To verify that the steady-state equilibrium $f_{\mathrm{intro}} \approx 14\%$ and the suppression of extrovert percolation do not rely on finely tuned parameters, we evaluate the stability of the phase boundaries across variations in key transition probabilities:
-
-\begin{enumerate}
-    \item \textbf{Robustness of the Sub-Percolation Regime ($R_0 < 1$)}:
-    The macroscopic spread of extrovert clades requires crossing the directed percolation threshold, which on a 2D topology requires $R_0 \ge 1$. Differentiating $R_0$ with respect to the travel friction $s_{\mathrm{travel}}$ and ideological mutation rate $p_{\mathrm{mutate}}$ reveals that the system remains sub-critical across orders of magnitude:
-    \begin{equation}
-    \frac{\partial R_0}{\partial s_{\mathrm{travel}}} = -\frac{p_{\mathrm{expand}} P(\mathrm{Empty})}{\delta_{\mathrm{extro}} + s_{\mathrm{purge}} P(\mathrm{Contact})} < 0
-    \end{equation}
-    Even if interstellar travel attrition is drastically reduced to $s_{\mathrm{travel}} = 0.05$ (highly shielded relativistic craft) and expansionist drive is doubled to $p_{\mathrm{expand}} = 0.10$, the heightened contact penalty with existing ruins ($s_{\mathrm{purge}} \approx 0.99$) maintains $R_0 \approx 0.62 < 1$. Thus, self-limiting topological clustering is an attractor of the spatial game.
-
-    \item \textbf{Scaling of the Inward Equilibrium Fraction}:
-    The asymptotic analytical equilibrium is governed strictly by the ratio of generation to turnover rates:
-    \begin{equation}
-    f_{\mathrm{intro}}^* = \left( 1 + \frac{\delta_{\mathrm{intro}} + p_{\mathrm{mutate}}}{p_{\mathrm{birth}}} \right)^{-1}
-    \end{equation}
-    Varying the ratio $(\delta_{\mathrm{intro}} + p_{\mathrm{mutate}}) / p_{\mathrm{birth}}$ across three orders of magnitude ($10^{-1}$ to $10^2$) yields dynamic occupancies spanning $1\% \le f_{\mathrm{intro}}^* \le 50\%$. Crucially, as established in Section~\ref{sec:galactic}, even an extreme saturation scenario of $f_{\mathrm{intro}} = 0.50$ shifts the COBE/FIRAS computational boundary by only a factor of $0.55\ \mathrm{dex}$, retaining $\dot{I}_{\mathrm{max}} \sim 7.5 \times 10^{41}\ \mathrm{bits\ s^{-1}}$. The primary observational consequence---that planetary-scale nodes ($\dot{I} \sim 10^{40}\ \mathrm{bits\ s^{-1}}$) remain completely hidden in diffuse galactic surveys---is invariant to parametric drift.
-\end{enumerate}
-
-\section{Thermodynamic Dissipation and Spectroscopic Signatures} \label{sec:thermo}
-
-\subsection{Landauer Dissipation in Extreme Substrates}
-Although inward civilizations cease macroscopic kinetic activities, they remain strictly constrained by the second law of thermodynamics. Landauer's principle establishes that the erasure of one bit of physical information dissipates a minimal heat quantity \cite{Landauer1961}:
+A homogeneous, approximate estimate that includes only a source's own
+outgoing conflict is
 \begin{equation}
-\Delta Q_{\mathrm{min}} = k_B T_{\mathrm{rad}} \ln 2
+\mathcal R_{\rm mf}\simeq
+\frac{q e}{\delta_X+(1-\delta_X)q u(1-e)}.
+\label{eq:mf}
 \end{equation}
-where $k_B$ is the Boltzmann constant and $T_{\mathrm{rad}}$ is the radiator temperature.
+It is not an exact spatial reproduction number: neighbor correlations,
+incoming attacks, repeated colonization attempts, and simultaneous
+events matter. In particular, a conflict probability conditional on an
+arrival must be multiplied by the arrival probability $q$; it cannot
+simply be added as $uP(\mathrm{contact})$ if contact denotes only neighbor
+occupancy. We do not assign the earlier unsupported values 0.42 or 0.62
+to this process.
 
-For an inward civilization operating at computational throughput $\dot{I}\ [\mathrm{bits\ s^{-1}}]$, the unavoidable steady-state thermal luminosity is:
+Let $\ell=m+(1-m)\delta_I$ and let $c_t$ be the conditional probability
+that an old empty site receives at least one successful colony proposal
+at step $t$. Independence of the emergence draw gives the exact
+ensemble-mean relation
 \begin{equation}
-P_{\mathrm{waste}} \ge \dot{I} k_B T_{\mathrm{rad}} \ln 2
+i_{t+1}-i_t=b e_t(1-c_t)-\ell i_t.
+\label{eq:balance}
 \end{equation}
-
-To maximize computational density per unit mass, advanced entities must maximize the thermodynamic efficiency of irreversible computation, which scales inversely with ambient temperature. Consequently, optimal computational architectures favor radiative cooling down to temperatures marginally above the Cosmic Microwave Background (CMB), $T_{\mathrm{rad}} \sim 10\text{--}30\ \mathrm{K}$.
-
-Assuming an engineered metamaterial radiator behaving as an ideal blackbody ($\epsilon \approx 1$), the required radiative surface area $A_{\mathrm{rad}}$ follows Stefan-Boltzmann's law:
+At stationarity this can be rearranged as
 \begin{equation}
-A_{\mathrm{rad}} = \frac{P_{\mathrm{waste}}}{\sigma T_{\mathrm{rad}}^4} = \frac{\dot{I} k_B \ln 2}{\sigma T_{\mathrm{rad}}^3}
+i_* = \frac{b(1-c_*)}{\ell+b(1-c_*)}(1-x_*-r_*).
+\label{eq:equilibrium}
 \end{equation}
+Neglecting incoming colonies, expanding sites, and remnants yields
+$i_*\simeq b/(b+\ell)=0.14287$, an approximate upper envelope,
+not a parameter-independent prediction. Varying $\ell/b$ from 0.1
+to 100 gives 90.9\% to 0.99\% in this reduced relation, not
+50\% to 1\%.
 
-For an extreme planetary-scale cognitive substrate with $\dot{I} = 10^{40}\ \mathrm{bits\ s^{-1}}$ operating at $T_{\mathrm{rad}} = 10\ \mathrm{K}$, the waste dissipation is $P_{\mathrm{waste}} \approx 9.57 \times 10^{17}\ \mathrm{W}$ ($\sim 7$ times the total solar flux intercepted by Earth), necessitating a radiator area of $A_{\mathrm{rad}} \approx 1.69 \times 10^{13}\ \mathrm{m^2}$ (equivalent to an array of radius $\sim 2.3 \times 10^3\ \mathrm{km}$).
+\subsection{Reproducible numerical examples}
+Both parameter sets in Table~\ref{tab:parameters} were simulated from an
+empty lattice for 20,000 steps with independent seeds 0--9, using NumPy's
+default PCG64 generator. We average steps 10,001--20,000 separately for
+each realization and report the mean and sample standard deviation of
+those ten time averages (Table~\ref{tab:dynamics}). These are late-time
+finite-lattice summaries; the quoted scatter is not a confidence interval
+for the astrophysical abundance and does not prove stationarity.
 
-\subsection{Robustness Against Reversible Computation} \label{sec:reversible}
-A fundamental theoretical objection arises regarding reversible computing architectures (e.g., Fredkin or Toffoli billiard-ball gates, superconducting adiabatic logic). In principle, fully logically reversible operations can circumvent the Landauer erasure penalty in the quasi-static, infinitely slow limit \cite{Bennett1973}. However, applying reversible computing to post-biological super-intelligences faces physical boundaries that strictly enforce a finite dissipation floor:
-
-\begin{enumerate}
-    \item \textbf{Finite-Time Thermodynamics}: Zero entropy generation requires infinitely slow adiabatic gate switching. At finite processing speeds, non-equilibrium friction dictates a non-zero dissipation rate scaling as $P_{\mathrm{diss}} \propto v^2$, where $v$ is the computational transition velocity.
-    \item \textbf{Quantum Error Correction (QEC)}: Radiative noise, cosmic ray interactions, and thermal fluctuations inevitably induce state decoherence. Maintaining topological fault-tolerance requires continuous syndrome measurements and ancilla qubit initialization. By the generalized Landauer principle, resetting ancilla registers to pure fiducial states constitutes an inherently irreversible physical operation, incurring an irreducible minimum dissipation.
-    \item \textbf{Environmental Openness (I/O)}: Any persistent cognitive node must maintain causal awareness of its stellar environment (e.g., monitoring gravitational perturbances or interstellar debris). Absorbing uncharacterized physical entropy and registering external sensory inputs necessitates periodic state overwriting.
-\end{enumerate}
-
-Consequently, even if a civilization implements reversible logic with an efficiency factor $\eta_{\mathrm{rev}} \approx 1 - 10^{-6}$, the throughput parameter $\dot{I}$ adopted in our model ($10^{40}\ \mathrm{bits\ s^{-1}}$) represents the \textit{net irreversible erasure rate}:
-\begin{equation}
-\dot{I} \equiv \dot{I}_{\mathrm{irr}} = (1 - \eta_{\mathrm{rev}}) \dot{I}_{\mathrm{total}}
-\end{equation}
-A gross operational capacity of $\dot{I}_{\mathrm{total}} \sim 10^{46}\ \mathrm{ops\ s^{-1}}$ (approaching the Margolus-Levitin quantum speed limit \cite{Margolus1998} for a planetary-mass substrate) coupled with a $99.9999\%$ reversible architecture naturally yields an unavoidable residual dissipation matching our baseline $\dot{I} \approx 10^{40}\ \mathrm{bits\ s^{-1}}$. The cryogenic waste heat discussed herein is therefore an irreducible physical invariant of open, finite-time intelligence.
-
-\subsection{Spectroscopic Signatures in the Far-Infrared Gap}
-The monochromatic flux density $S_\nu$ received by a terrestrial observer at distance $d$ is:
-\begin{equation}
-S_\nu = \frac{A_{\mathrm{rad}}}{4 d^2} B_\nu(T_{\mathrm{rad}}) = \frac{A_{\mathrm{rad}}}{4 d^2} \frac{2 h \nu^3}{c^2} \left[ \exp\left(\frac{h\nu}{k_B T_{\mathrm{rad}}}\right) - 1 \right]^{-1}
-\end{equation}
-
-\begin{figure}[t]
+\begin{table}[ht]
 \centering
-\includegraphics[width=\columnwidth]{fig2_spectra.pdf}
-\caption{\textbf{Spectral energy distribution of an inward node ($d=10\ \mathrm{pc}$) vs. observatory sensitivities.} The emission from 10--30 K nodes falls precisely into the Far-Infrared Gap ($30\text{--}300\ \mu\mathrm{m}$), evading Herschel archives while intersecting the design envelope of PRIMA.}
-\label{fig:spectra}
-\end{figure}
+\caption{Late-time site fractions in percent. Uncertainties are between-seed
+standard deviations, also in percentage points.}
+\begin{tabular}{lcc}
+\toprule
+State & Baseline & Higher expansion\\
+\midrule
+Empty & $83.482\pm0.197$ & $81.958\pm0.179$\\
+Inward & $13.898\pm0.223$ & $13.536\pm0.180$\\
+Expanding & $0.2003\pm0.0041$ & $0.2373\pm0.0041$\\
+Remnant & $2.419\pm0.049$ & $4.269\pm0.060$\\
+\bottomrule
+\end{tabular}
+\label{tab:dynamics}
+\end{table}
 
-Figure~\ref{fig:spectra} compares the predicted thermal flux of a node at $d = 10\ \mathrm{pc}$ against instrument detection thresholds across five orders of magnitude in wavelength. Crucially, three observational regimes emerge:
-\begin{enumerate}
-    \item \textbf{The JWST Blindspot}: The James Webb Space Telescope's MIRI instrument truncates at $\lambda = 28\ \mu\mathrm{m}$. Radiation from nodes cooled below $50\ \mathrm{K}$ undergoes Rayleigh-Jeans suppression in the mid-infrared, falling far below MIRI sensitivity limits.
-    \item \textbf{The Herschel Insensitivity}: The Herschel Space Observatory covered the $70\text{--}500\ \mu\mathrm{m}$ range; however, its warm telescope architecture ($T_{\mathrm{mirror}} \approx 80\ \mathrm{K}$) imposed a thermal photon noise floor of several milli-Janskys ($4\text{--}8\ \mathrm{mJy}$). The peak flux from an inward node ($\sim 80\ \mu\mathrm{Jy}$ at $10\ \mathrm{K}$) fell two orders of magnitude below Herschel's detection ceiling.
-    \item \textbf{ALMA Submillimeter Marginality}: Ground-based submillimeter interferometry with ALMA suffers severe atmospheric absorption at $\lambda < 350\ \mu\mathrm{m}$. At ALMA Band 9 and 7, the node's flux skirts closely beneath standard 1-hour continuum sensitivities.
-\end{enumerate}
+The baseline supports a mostly non-expanding active population for these
+chosen rules. The second example also has low expanding occupancy, but
+does not establish a universal phase boundary. Persistent mutation
+supplies new expansionists even if individual lineages die out.
+A nearest-neighbor square-lattice bond threshold of $1/2$ is not a
+threshold for this eight-neighbor interacting, time-dependent model.
 
-Thus, the optimal thermal output of cryogenic inward civilizations occupies the ``Far-Infrared Gap'' ($30\text{--}300\ \mu\mathrm{m}$), explaining why historical surveys have recorded null detections.
+\subsection{Update scheme, correlations, and lineage lifetimes}
+To check that the synchronous convention does not drive the occupancies,
+we also simulated random-sequential updating with the same local
+probabilities. One asynchronous Monte Carlo sweep (MCS) consists of
+$N=3600$ independent uniform site selections with replacement; the
+selected site applies its local rule to the current lattice. This is a
+discrete-time chain, not a continuous-time or Gillespie model.
+Selections that cannot change any state are skipped exactly by sampling
+geometric waiting numbers, and the accelerated implementation was
+checked against a direct implementation and an analytic two-state
+expectation. Protocols match Table~\ref{tab:dynamics}: 20,000 steps
+or MCS, seeds 0--9, averages over the second half
+(Table~\ref{tab:async}).
 
-\subsection{Breaking Degeneracy with Natural Interstellar Dust}
-A critical astrophysical challenge is distinguishing an engineered cryogenic radiator from natural cold interstellar dust clumps. Cold dust emission is universally parameterized by a modified blackbody (graybody) distribution:
-\begin{equation}
-S_\nu^{\mathrm{dust}} \propto \nu^\beta B_\nu(T_{\mathrm{dust}})
-\end{equation}
-where $\beta$ is the dust emissivity spectral index, empirically measured across Milky Way molecular clouds as $\beta \approx 1.5\text{--}2.0$ due to frequency-dependent grain absorption cross-sections \cite{Hildebrand1983}.
-
-In the submillimeter Rayleigh-Jeans regime ($h\nu \ll k_B T$), the spectral index $\alpha \equiv d \ln S_\nu / d \ln \nu$ serves as a decisive diagnostic:
-\begin{equation}
-\alpha_{\mathrm{RJ}} = 2 + \beta
-\end{equation}
-\begin{itemize}
-    \item \textbf{Engineered Inward Node ($\beta = 0$)}: As an optimized cavity/metamaterial radiator, the emission represents a pure Planckian blackbody:
-    \begin{equation}
-    S_\nu \propto \nu^2 \implies \alpha_{\mathrm{node}} \approx 2.0
-    \end{equation}
-    \item \textbf{Natural Cold Dust ($\beta \approx 1.7$)}: Grain scattering and micro-physics steepen the slope:
-    \begin{equation}
-    S_\nu \propto \nu^{3.7} \implies \alpha_{\mathrm{dust}} \approx 3.7
-    \end{equation}
-\end{itemize}
-
-As demonstrated in Figure~\ref{fig:spectra}, the pure blackbody maintains significantly higher submillimeter flux than natural dust. Multi-band photometry at submillimeter wavelengths capable of measuring $\alpha < 2.5$ provides an unambiguous physical discriminator against natural astrophysical foregrounds.
-
-\section{Galactic Background Constraints} \label{sec:galactic}
-To establish whether the steady-state occupancy $f_{\mathrm{intro}} \approx 14\%$ violates empirical cosmic background measurements, we integrate over the stellar distribution of the Milky Way ($N_\star \approx 10^{11}$). The integrated galactic excess thermal luminosity $L_{\mathrm{excess}}$ is:
-\begin{equation}
-L_{\mathrm{excess}} = f_{\mathrm{intro}} N_\star P_{\mathrm{waste}} = f_{\mathrm{intro}} N_\star (\dot{I} k_B T_{\mathrm{rad}} \ln 2)
-\end{equation}
-
-\begin{figure}[t]
+\begin{table}[ht]
 \centering
-\includegraphics[width=\columnwidth]{fig3_exclusion.pdf}
-\caption{\textbf{Astrophysical parameter exclusion space ($T\_{\mathrm{rad}} = 15\ \mathrm{K}$).} The simulated population state ($\dot{I} = 10^{40}\ \mathrm{bits\ s^{-1}}$, $f = 14\%$) lies well below diffuse limits from COBE/FIRAS, while falling within the single-node discovery envelope of PRIMA.}
-\label{fig:exclusion}
-\end{figure}
+\caption{Late-time inward and expanding site fractions (percent) under
+synchronous (S) and random-sequential (A) updating; between-seed
+standard deviations in percentage points.}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llcc}
+\toprule
+Case & Upd. & Inward & Expanding\\
+\midrule
+Baseline & S & $13.898\pm0.223$ & $0.2003\pm0.0041$\\
+Baseline & A & $13.974\pm0.419$ & $0.1999\pm0.0044$\\
+Higher exp. & S & $13.536\pm0.180$ & $0.2373\pm0.0041$\\
+Higher exp. & A & $13.545\pm0.326$ & $0.2344\pm0.0086$\\
+\bottomrule
+\end{tabular}
+\label{tab:async}
+\end{table}
 
-The COBE/FIRAS instrument constrained non-cosmological diffuse far-infrared excess to $<0.1\%$ of the total Milky Way infrared luminosity ($L_{\mathrm{TIR, MW}} \approx 10^{10}\ L_\odot \approx 3.83 \times 10^{36}\ \mathrm{W}$) \cite{Fixsen1996}:
+Mean occupancies agree within the between-seed scatter, but the
+asynchronous runs show larger scatter in some quantities. Similar means
+do not imply that the two stochastic processes are equivalent.
+We also measured connected indicator covariances along the lattice axes
+at separations 1, 2, 4, and 8, and temporal autocorrelations of the
+occupancy series at lags 1, 10, and 100. For the baseline, the
+nearest-neighbor expanding-state covariance is $1.17\times10^{-4}$
+(synchronous) and $1.19\times10^{-4}$ (asynchronous), and the
+lag-10 autocorrelation of expanding occupancy is 0.674 and 0.676.
+The inward occupancy has lag-100 autocorrelation of about 0.89, so
+successive steps are far from independent samples; between-seed
+scatter, not the within-run variance, is the quoted uncertainty.
+
+Lineage survival was measured in a separate experiment. A single
+expanding site was placed on an otherwise empty lattice, with
+emergence and mutation disabled so that every expanding site descends
+from the founder. Each case and update scheme was run 200 times
+(800 trials), recording the first integer step with no expanding site
+and right-censoring at 1000 steps. No trial was censored: every lineage
+went extinct within 500 steps (Table~\ref{tab:lineage}).
+
+\begin{table}[ht]
+\centering
+\caption{Single-founder lineage lifetimes (200 trials per entry).}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcc}
+\toprule
+& Baseline & Higher exp.\\
+\midrule
+Median lifetime, S / A & 20.5 / 16 & 23.5 / 24\\
+Trials surviving $>100$, S / A & 10 / 5 & 7 / 7\\
+Longest lifetime, S / A & 179 / 133 & 162 / 171\\
+\bottomrule
+\end{tabular}
+\label{tab:lineage}
+\end{table}
+
+In the higher-expansion case the contact-free bound
+$\mathcal R_{\rm upper}=1.90$ exceeds unity, yet all 400 lineages
+still died out. This is consistent with blocking and conflict deaths,
+which the bound ignores, dominating lineage growth in this model. These finite samples do not
+show that the infinite-time survival probability is zero, and similar
+mean occupancies do not imply identical lifetime distributions.
+Lattice-size dependence, relaxing the assumption that inward sites are
+never overwritten, physical propagation delays, and broader parameter
+sweeps remain untested. The present probabilities incorporate
+the longevity and protective advantages that favor inward sites; those
+advantages are not independently explained by the simulation.
+
+\section{Thermal emission of a specified computing source}
+\subsection{Erasure, reservoir temperature, and radiator area}
+For erasure of unbiased, uncorrelated classical bits into a reservoir at
+temperature $\Tb$, the Landauer bound is
+\cite{Landauer1961,Bennett1973}
 \begin{equation}
-L_{\mathrm{limit}} \approx 10^{-3} L_{\mathrm{TIR, MW}} \approx 3.83 \times 10^{33}\ \mathrm{W}
+P_{\rm comp}\geq\Iirr k_B\Tb\ln2.
 \end{equation}
-
-Setting $L_{\mathrm{excess}} \le L_{\mathrm{limit}}$ provides the upper bound on per-node computation:
+Here $\Iirr$ counts irreversibly erased bits per second, not logical
+operations, stored bits, or an architecture-independent computational
+capacity. Correlations and biased input distributions require an
+entropy-based formulation. We parameterize the chosen benchmark by
 \begin{equation}
-\dot{I}_{\mathrm{max}} = \frac{L_{\mathrm{limit}}}{f_{\mathrm{intro}} N_\star k_B T_{\mathrm{rad}} \ln 2}
+P_{\rm comp}=\eta\Iirr k_B\Tb\ln2,\qquad\eta\geq1.
 \end{equation}
+The model ignores other power uses and takes $\eta=1$ and
+$\Tb=\Trad=T$. In a physical device the computing reservoir and
+radiator need not have identical temperatures. Finite heat transfer,
+refrigeration, error correction, and power conversion can increase the
+total heat load. Equality is a normalization to an ideal lower bound,
+not a claim that finite-rate computing achieves it.
 
-For $T_{\mathrm{rad}} = 15\ \mathrm{K}$ and $f_{\mathrm{intro}} = 0.14$:
+For a blackbody radiator with total emitting area $A$ in a negligible
+incident radiation field,
 \begin{equation}
-\dot{I}_{\mathrm{max}} \approx 2.7 \times 10^{42}\ \mathrm{bits\ s^{-1}}
+A=\frac{P_{\rm comp}}{\sigma T^4}
+ =\frac{\eta\Iirr k_B\ln2}{\sigma T^3}.
+\label{eq:area}
 \end{equation}
+At $\Iirr=10^{40}$ bits s$^{-1}$ and $T=10$ K,
+\begin{align}
+P_{\rm comp}&=9.56993\times10^{17}\ {\rm W},\\
+A&=1.68771\times10^{21}\ {\rm m^2}.
+\end{align}
+The equivalent one-face disk radius is $\sqrt{A/\pi}=0.15493$ AU,
+or $2.32\times10^7$ km. For a spherical outer surface,
+$R=\sqrt{A/(4\pi)}=0.07747$ AU; a disk emitting on both faces has
+radius $\sqrt{A/(2\pi)}$. These are different geometries.
+Cooling infrastructure is therefore substantial even if the processor
+is spatially compact. At fixed erasure rate and $\eta$, lowering $T$
+reduces power linearly but increases area as $T^{-3}$.
 
-Figure~\ref{fig:exclusion} presents the resulting parameter exclusion space. The representative inward node model ($\dot{I} = 10^{40}\ \mathrm{bits\ s^{-1}}$) resides approximately 2.4 orders of magnitude below the COBE/FIRAS diffuse background boundary. Consequently, a galactic substrate where one in every seven star systems hosts an advanced computational intelligence is entirely compatible with empirical cosmology.
+In an isotropic blackbody background at $T_{\rm bg}$ the net cooling
+balance becomes $P_{\rm comp}=A\sigma(T^4-T_{\rm bg}^4)$.
+For $T_{\rm bg}=2.725$ K, the required 10 K area increases by about
+0.55\%. Stellar irradiation is potentially much larger. An unshielded
+blackbody sphere near a Sun-like star has an equilibrium temperature
+of approximately $278\,{\rm K}(r/{\rm AU})^{-1/2}$ even without internal
+heating; reaching 10 K would require a distance of order 770 AU under
+those assumptions. Shielding or another environment is therefore
+required for a cold radiator near a star. We do not specify its energy
+source, mass, material emissivity, or engineering feasibility.
 
-\section{Discussion and Observational Roadmap} \label{sec:discussion}
-The synthesis of evolutionary game theory and computational thermodynamics fundamentally reframes the Fermi Paradox. The Great Silence is neither indicative of a biological desert nor a consequence of universal existential catastrophe; rather, macro-expansionism represents an evanescent, energetically inefficient adolescent phase of technological development. The ultimate attractor of machine intelligence is spatial and thermal condensation.
+More generally, the steady-state balance of a radiator with
+spectral emissivity $\epsilon_\nu(\hat k)$ is
+\begin{multline}
+P_{\rm comp}+P_{\rm aux}
++\int\!d\nu\!\int\!d\Omega\,\epsilon_\nu A_\perp I^{\rm in}_\nu \\
+=\int\!d\nu\!\int_A\!dA\!\int_{2\pi}\!d\Omega\,
+\epsilon_\nu\cos\theta\,B_\nu(T),
+\end{multline}
+where $P_{\rm aux}$ collects power conversion, refrigeration, and other
+non-computational loads, $I^{\rm in}_\nu$ is the direction-dependent
+incident intensity, and $A_\perp$ is the projected area facing each
+incident direction (absorptivity equals emissivity by Kirchhoff's law).
+The benchmark sets $P_{\rm aux}=0$, $I^{\rm in}_\nu=0$, and
+$\epsilon_\nu=1$. Each relaxation increases the required area or changes
+the spectrum. The total emitting area also does not imply a single rigid
+structure; it could be distributed across a swarm. If such a system is
+spatially extended compared with the instrument beam, the point-source
+forecasts below do not apply.
 
-Crucially, our formulation transitions the inward transcension hypothesis from an unfalsifiable conceptual conjecture into a concrete, observationally testable astrobiological paradigm. As demonstrated in Section~\ref{sec:thermo} and Figure~\ref{fig:spectra}, the key impediment historically shielding cryogenic inward nodes from detection has been the Far-Infrared Gap ($30\text{--}300\ \mu\mathrm{m}$), bounded by atmospheric opacity on the ground and thermal mirror self-emission on past space missions.
+\subsection{Limits of arguments from reversible computation}
+Logical reversibility can reduce the number of erasures associated with
+a computation \cite{Bennett1973}. Error correction and environmental
+interactions can generate heat, but their rates depend on hardware,
+noise, control, and protocol. Neither a universal dissipation law
+$P\propto v^2$ nor a universal residual erasure rate of $10^{40}$ bits
+s$^{-1}$ follows from these considerations. The conversion of gross
+operations to erased bits requires an explicitly defined architecture.
+The quantum speed limit bounds dynamical evolution for a specified
+energy above the ground state \cite{Margolus1998}; it does not fix that
+conversion or establish that the selected benchmark approaches a
+planetary computer's capacity. We therefore treat $\Iirr$ as a free
+parameter, and make no claim of a nonzero universal heat floor for all
+possible intelligences.
 
-This observational barrier will be decisively dismantled by NASA's planned Probe Far-Infrared Mission for Astrophysics (PRIMA) \cite{PRIMA2024}. Featuring a cryogenically cooled ($T_{\mathrm{mirror}} \sim 4.5\ \mathrm{K}$) 1.8-meter aperture, PRIMA will eliminate the overwhelming photon noise floor that blinded Herschel. We outline a two-tier observational pipeline to test the presence of inward technosignatures within the solar neighborhood ($d \le 10\ \mathrm{pc}$):
+\section{Spectral predictions and geometric conventions}
+For an unresolved source with isotropic total luminosity, each emitting
+surface element contributes a hemispheric blackbody exitance $\pi B_\nu$.
+Consequently,
+\begin{align}
+L_\nu &= A\pi B_\nu(T),\\
+S_\nu &= \frac{L_\nu}{4\pi d^2}
+       =\frac{A}{4d^2}\frac{2h\nu^3/c^2}{\exp(h\nu/k_BT)-1}.
+\label{eq:flux}
+\end{align}
+This normalization integrates to $P_{\rm comp}/(4\pi d^2)$.
+A planar radiator has an inclination-dependent flux; its equivalent
+area radius must not be inserted as a spherical radius. If the net
+background-cooling model is used, the background-subtracted spectrum
+has $B_\nu(T)-B_\nu(T_{\rm bg})$ in Eq.~\ref{eq:flux}.
+All tabulated benchmarks below instead use $T_{\rm bg}=0$.
 
-\begin{enumerate}
-    \item \textbf{Primary Survey via PRIMA/GERONIMO}:
-    The GERONIMO broad-band far-infrared camera ($25\text{--}200\ \mu\mathrm{m}$) provides full-field sensitivities of $\sigma_{\mathrm{rms}} \sim 10\text{--}15\ \mu\mathrm{Jy}$ in standard deep integrations. For a cryogenic node ($T_{\mathrm{rad}} = 10\ \mathrm{K}$, $\dot{I} = 10^{40}\ \mathrm{bits\ s^{-1}}$) located at $d = 10\ \mathrm{pc}$, the expected flux density at $100\ \mu\mathrm{m}$ is $S_{\nu} \approx 83\ \mu\mathrm{Jy}$, yielding a robust $5.5\sigma\text{--}8.3\sigma$ photometric detection. Candidates are identified as unconfused, isolated point sources with no cataloged optical (Gaia) or near-to-mid-infrared (JWST/MIRI) counterparts.
+\begin{table}[ht]
+\centering
+\caption{Monochromatic $S_\nu$ in $\ujy$, for $\Iirr=10^{40}$ bits
+s$^{-1}$, $d=10$ pc, and $\eta=1$. Values are not bandpass-integrated
+photometric predictions.}
+\begin{tabular}{rrrr}
+\toprule
+$\lambda$ ($\mu$m) & 10 K & 15 K & 30 K\\
+\midrule
+92   & 0.0365 & 1.987 & 45.85\\
+100  & 0.0993 & 3.562 & 54.33\\
+126  & 0.9669 & 12.89 & 74.11\\
+183  & 11.07 & 45.29 & 83.48\\
+235  & 29.82 & 69.01 & 75.02\\
+450  & 82.33 & 77.07 & 37.60\\
+850  & 64.65 & 40.62 & 14.01\\
+1300 & 39.58 & 21.75 & 6.652\\
+3000 & 10.60 & 5.128 & 1.393\\
+\bottomrule
+\end{tabular}
+\label{tab:flux}
+\end{table}
 
-    \item \textbf{Diagnostic Discrimination via ALMA Band 7/8/9}:
-    Candidates identified by PRIMA must undergo follow-up continuum interferometry using ALMA to break the degeneracy against isolated, low-mass interstellar cold dust cores or rogue brown dwarfs. At $\lambda = 450\ \mu\mathrm{m}$ (Band 9) and $\lambda = 850\ \mu\mathrm{m}$ (Band 7), our model predicts an unattenuated pure blackbody flux of $S_{450} \approx 1.2\ \mathrm{mJy}$ and $S_{850} \approx 0.34\ \mathrm{mJy}$. With ALMA's 12-meter array achieving sub-mJy continuum sensitivities within $\sim 20$ minutes of on-source integration, multi-frequency flux ratios can empirically constrain the Rayleigh-Jeans spectral index $\alpha$ with an uncertainty of $\Delta \alpha < 0.15$. A measured slope of $\alpha \approx 2.0 \pm 0.15$ decisively confirms an artificial pure blackbody ($\beta = 0$), conclusively ruling out modified blackbody graybody dust emission ($\alpha \approx 3.7$, $\beta \approx 1.7$).
-\end{enumerate}
+The peak of $B_\lambda$ occurs at $\lambda T=2897.77\ \mu$m K,
+whereas the wavelength corresponding to the maximum of $B_\nu$ obeys
+$\lambda T=5099.44\ \mu$m K. Thus, a plot of $S_\nu$ against wavelength
+peaks at 510, 340, and 170 $\mu$m for 10, 15, and 30 K. The 10--15 K
+maxima therefore fall near ALMA Bands 9 and 10, which span roughly
+416--498 and 316--381 $\mu$m, rather than in the PRIMAger bands.
+A claim about
+``the peak'' must state the spectral convention. The thermal signatures
+span the far-infrared and submillimeter; they do not all peak inside
+30--300 $\mu$m. At 28 $\mu$m the 10 and 30 K fluxes are only
+$3.87\times10^{-16}$ and $0.0108\ \ujy$ under this normalization.
+This short-wavelength attenuation is \emph{Wien suppression}, not
+Rayleigh--Jeans suppression.
 
-Furthermore, astrometric tracking of candidate nodes will detect non-Keplerian kinematics or galactocentric orbital motion typical of autonomous stellar-orbiting megastructures, distinguishing them from unbound interstellar interlopers.
+\subsection{Exact slopes and astrophysical degeneracies}
+An optically thin, single-temperature dust model may be written
+$S_\nu\propto\nu^\beta B_\nu(T_d)$ \cite{Hildebrand1983}. Its
+local spectral index is
+\begin{equation}
+\alpha(\nu)=3+\beta-\frac{x}{1-\exp(-x)},
+\quad x=\frac{h\nu}{k_BT_d}.
+\end{equation}
+Only for $x\ll1$ does $\alpha$ approach $2+\beta$.
+For two bands at $\lambda_1<\lambda_2$, the measured index is instead
+\begin{equation}
+\alpha_{12}=\frac{\ln(S_{\nu_1}/S_{\nu_2})}
+ {\ln(\nu_1/\nu_2)}.
+\end{equation}
+Between 450 and 850 $\mu$m, a pure blackbody has
+$\alpha_{12}=0.380,1.007,1.553$ at 10, 15, and 30 K. A 15 K,
+$\beta=1.7$ optically thin template gives 2.707; the same template
+at 10 K gives 2.080. Consequently, even optically thin dust can satisfy
+$\alpha<2.5$. Optically thick dust can approach a blackbody, and
+temperature mixtures, grain growth, and redshift broaden the possible
+spectra. Engineered surfaces need not have $\beta=0$ either. A
+blackbody-like continuum is therefore a candidate-selection feature,
+not proof of artificiality.
 
-\section{Conclusion} \label{sec:conclusion}
-We have shown that macroscopic interstellar expansion is dynamically suppressed by percolation bottlenecks ($R_0 < 1$), whereas inward-oriented computational intelligences converge to a stable galactic occupancy fraction of $f_{\mathrm{intro}} \approx 14\%$. Constrained by Landauer's principle, these entities dissipate heat at cryogenic temperatures ($10\text{--}30\ \mathrm{K}$), naturally masking their signatures within the Far-Infrared Gap. This thermodynamic cloaking simultaneously evades historical sky surveys and respects galactic background constraints. The resolution to the Fermi Paradox lies not in searching for noisy radio beacons, but in surveying the cryogenic far-infrared sky with the next generation of space observatories.
+\section{Observational forecasts as sensitivity requirements}
+\subsection{Current and future far-infrared observations}
+Confusion from unresolved sources must be distinguished from instrumental
+thermal noise. For example, SPIRE confusion estimates of 5.8, 6.3, and
+6.8 mJy beam$^{-1}$ at 250, 350, and 500 $\mu$m describe sky fluctuations,
+not a universal noise floor caused by Herschel's mirror
+\cite{Nguyen2010}. Our benchmark sources are much fainter. This comparison
+does not characterize every targeted, prior-assisted, or time-domain
+analysis of archival data.
 
-\bibliographystyle{plain}
-\bibliography{references}
+The relevant planned PRIMA camera is \emph{PRIMAger}, not GERONIMO.
+Its 2025 design paper gives 24--84 $\mu$m hyperspectral coverage and
+four broad polarimetric bands centered at 92, 126, 183, and 235 $\mu$m,
+with band edges extending to 264 $\mu$m \cite{Ciesla2025}.
+NASA selected PRIMA to advance to Phase B on 23 September 2026
+\cite{NASA2026}; it is not an operating observatory. We use those
+published band centers as reference wavelengths, not final flight
+response functions. Bandpass integration and color corrections are
+especially important on a 10 K spectrum's Wien side.
 
+Published mapping requirements are not equivalent to a universal
+10--15 $\ujy$ point-source RMS in an unspecified integration. Indeed,
+the 2025 instrument paper's Table 2 note specifies a 10-hour,
+one-square-degree map, whereas adjacent prose refers to a one-hour
+reference. We do not extrapolate that inconsistent normalization into
+an exposure prediction. Cooling a telescope reduces its own thermal
+background but does not remove source confusion. A validated observing
+mode, sky field, response curve, and noise model are needed before
+claiming a detection time or a survey yield.
+
+\subsection{Source confusion at 235 $\mu$m}
+For the 235 $\mu$m PRIMAger band, Donnellan et al.\ estimate a classical
+confusion limit, defined as five times the confusion noise, of 46 mJy
+\cite{Donnellan2024}. The 10 K benchmark at 10 pc gives 0.02982 mJy,
+about 1500 times fainter. Ordinary single-band blind extraction
+therefore cannot detect this source at 10 pc. Applying the same
+threshold to Eq.~\ref{eq:horizon} gives 0.2546 pc (about
+52,500 AU); this is a simple threshold conversion, not a measured
+search completeness. Hyperspectral and prior-based deblending can reach
+below the classical limit \cite{Donnellan2024}, but the depth achievable
+for a particular target requires injection--recovery and false-positive
+tests in realistic simulated maps. The $10\ \ujy$ RMS in
+Table~\ref{tab:horizon} is therefore a requirement for comparison, not
+an achieved sensitivity.
+
+The 2025 design gives a 235 $\mu$m beam FWHM of about 27.9$''$
+\cite{Ciesla2025}. The value of about 33$''$ sometimes quoted for a
+1.8 m aperture is the first dark-ring radius $1.22\lambda/D$ of an ideal
+Airy pattern, not the FWHM.
+
+\subsection{Outer Solar System versus 10 pc}
+Two search regimes should be separated. A source in the outer Solar
+System at 10,000 AU has an annual parallax of $20.6''$, comparable to
+the beam, so multi-epoch differencing can separate it from static
+confusion. At 10 pc the parallax is $0.1''$, far smaller than the beam.
+When a source moves by much less than a beam between epochs, the
+difference map retains only a small fraction of its flux, and
+differencing does not escape confusion. The horizons above apply to
+neither regime without a modeled observing strategy.
+
+\subsection{Conditional detection horizons}
+For total effective RMS $\sigma_\nu$, threshold $n$, and a fixed
+unresolved source model, a conditional horizon is
+\begin{equation}
+d_{\max}=10\ {\rm pc}
+\left[\frac{S_\nu(10\ {\rm pc})}{n\sigma_\nu}\right]^{1/2}.
+\label{eq:horizon}
+\end{equation}
+The illustrative choice $\sigma_\nu=10\ \ujy$ and $n=5$ gives
+Table~\ref{tab:horizon}. The same noise is used at every wavelength
+solely to expose the source-temperature dependence; it is not a
+PRIMA or ALMA performance prediction. With $\eta$ and temperatures
+fixed, $d_{\max}\propto\Iirr^{1/2}$.
+
+\begin{table}[ht]
+\centering
+\caption{Conditional $5\sigma$ horizons (pc) for effective RMS
+$10\ \ujy$ and $\Iirr=10^{40}$ bits s$^{-1}$.}
+\begin{tabular}{rrrr}
+\toprule
+$\lambda$ ($\mu$m) & 10 K & 15 K & 30 K\\
+\midrule
+100 & 0.446 & 2.67 & 10.42\\
+183 & 4.70 & 9.52 & 12.92\\
+235 & 7.72 & 11.75 & 12.25\\
+450 & 12.83 & 12.42 & 8.67\\
+850 & 11.37 & 9.01 & 5.29\\
+\bottomrule
+\end{tabular}
+\label{tab:horizon}
+\end{table}
+
+At 10 pc the 10 K benchmark requires RMS below
+$0.0199\ \ujy$ at 100 $\mu$m or $5.96\ \ujy$ at
+235 $\mu$m for a $5\sigma$ detection. It is not an
+83 $\ujy$ source at 100 $\mu$m. The quoted signal at
+450 $\mu$m is $0.0823$ mJy and at 850 $\mu$m is
+$0.0647$ mJy, not 1.2 and 0.34 mJy.
+
+\subsection{ALMA follow-up and identification}
+For independent flux errors and sufficiently high signal-to-noise ratios
+$\rho_1,\rho_2$, the two-band statistical uncertainty is
+\begin{equation}
+\sigma_\alpha\simeq
+\frac{\sqrt{\rho_1^{-2}+\rho_2^{-2}}}{|\ln(\nu_1/\nu_2)|}.
+\label{eq:alphaerror}
+\end{equation}
+At 450/850 $\mu$m, $\sigma_\alpha=0.15$ requires
+$\rho_1=\rho_2\simeq14.8$ for equal signal-to-noise. For the
+10 K benchmark this corresponds to statistical RMS of about
+5.55 and 4.36 $\ujy$, respectively. Cross-band calibration errors
+must also be propagated, including their covariance; independent
+10\% fractional errors alone would give $\sigma_\alpha\simeq0.222$.
+No universal 20-minute integration claim follows. An ALMA exposure
+estimate needs frequency, bandwidth, array, weather, resolution, and
+overheads; the observatory calculator reports on-source time
+\cite{ALMAcalculator}.
+
+Candidate follow-up should fit complete Planck or modified-blackbody
+spectra and compare astrophysical alternatives using spectroscopy,
+polarization, morphology, and repeat astrometry. Identification should
+be a model comparison that uses measured sizes, motions, spectral energy
+distributions, and line intensities together with their upper limits.
+We do not adopt fixed far-infrared-to-optical ratios, outright rejection
+of a natural model at $3\sigma$, or a conclusion based only on
+non-detection of CO or C$^{18}$O lines. Proper motion or
+parallax can establish proximity; association with a star can help
+locate a source. Neither common motion nor Keplerian or unusual motion
+alone establishes artificiality. Searches may include both isolated
+sources and cold excess around cataloged stars; requiring no optical
+counterpart would exclude the latter by construction.
+
+\section{A conditional Galactic luminosity budget}
+If, additionally, each occupied star hosts one identical node, the
+aggregate computing luminosity is
+\begin{equation}
+L_{\rm nodes}=f_\star N_\star\eta\Iirr k_B\Tb\ln2.
+\end{equation}
+Here $f_\star$ is an assumed stellar occupancy, not an observed fraction
+or a calibrated output of the lattice model. With $f_\star=0.14$,
+$N_\star=10^{11}$, $T=15$ K, and the benchmark erasure rate,
+\begin{equation}
+L_{\rm nodes}=2.01\times10^{28}\ {\rm W}.
+\end{equation}
+This corresponds to $1.4\times10^{10}$ nodes under the one-node-per-star
+assumption. Adopt, solely as an illustrative scale,
+$L_{\rm TIR}=10^{10}L_\odot=3.828\times10^{36}$ W and allocate
+$\epsilon=10^{-3}$ of it to a hypothetical extra component. Then
+\begin{equation}
+\dot I_{\mathrm{irr,max}}=\frac{\epsilon L_{\rm TIR}}
+ {f_\star N_\star\eta k_B\Tb\ln2}
+ =1.90\times10^{45}\ {\rm bits\ s^{-1}}.
+\label{eq:budget}
+\end{equation}
+The benchmark is 5.28 dex below this chosen budget, not 2.4 dex.
+The Galactic budget $\epsilon L_{\rm TIR}=3.828\times10^{33}$ W must
+be distinguished from its allocation per node,
+$\epsilon L_{\rm TIR}/(f_\star N_\star)=2.734\times10^{23}$ W, or
+$7.1\times10^{-4}\,L_\odot$. Because the energy per erased bit scales
+with $\Tb$, the per-node limit is $1.905\times10^{45}$ bits s$^{-1}$
+at 15 K and $1.429\times10^{45}$ bits s$^{-1}$ at 20 K.
+For $f_\star=0.50$ at 15 K, the corresponding value is
+$5.33\times10^{44}$ bits s$^{-1}$. These values correct arithmetic
+within the assumed budget; they do not validate the assumption and are
+not limits measured with FIRAS.
+
+The cited FIRAS analysis \cite{Fixsen1996} constrains deviations in the
+cosmic microwave background spectrum. It does not establish a generic
+upper limit of $10^{-3}L_{\rm TIR}$ on an arbitrary Galactic 15 K
+population. A real limit requires a spatial distribution, spectral
+templates, foreground separation, masks, bandpasses, and measurement
+covariance. For example, the sky intensity in direction $\hat n$ would
+depend on
+\begin{equation}
+I_\nu(\hat n)=\frac{1}{4\pi}\int n_{\rm node}(s\hat n)L_\nu\,ds,
+\end{equation}
+which must be fitted jointly with natural Galactic and extragalactic
+emission. A bolometric luminosity comparison alone cannot replace that
+analysis. We therefore label the companion budget plot as conditional,
+and remove the claim of a measured COBE/FIRAS exclusion region.
+
+\section{Limitations, reproducibility, and conclusion}
+The source model neglects non-blackbody emissivity, temperature
+distributions, absorbed starlight, anisotropic emission, and power-system
+losses. The population model lacks calibrated timescales, a stellar
+spatial distribution, or a causal derivation of behavior. In particular,
+the nearly 14\% inward fraction is a consequence of chosen emergence,
+loss, and interaction rules; it is not a Galactic abundance estimate.
+
+The accompanying code supplies seeded simulation summaries, the
+update-scheme comparison and lineage experiment, monochromatic flux
+tables, confusion and budget calculations, and five regenerated
+figures. Twenty unit and numerical tests check energy conservation by
+integrating the Planck spectrum, limiting behavior, flux scaling,
+simultaneous-event precedence, a two-state stationary balance, and the
+asynchronous implementation against analytic expectations and a direct
+implementation. Numerical examples in this draft use two parameter
+sets and ten seeds each. They constitute reproducible examples rather
+than a full robustness or percolation study. This standalone manuscript
+embeds its numerical tables and bibliography; companion figures can be
+used in a subsequent journal layout.
+
+Within its stated assumptions, a cold computing source is faint in the
+mid-infrared and can be brighter in far-infrared or submillimeter bands.
+Low-temperature computation trades reduced erasure energy against much
+larger radiator area. Exact spectral modeling changes both discovery
+forecasts and dust discrimination. These observations motivate searches
+for specified cold thermal populations with explicit completeness and
+foreground models, while leaving their abundance, technological origin,
+and relevance to the Fermi paradox open.
+
+\begin{thebibliography}{99}
+\bibitem{Dyson1960} F. J. Dyson (1960), ``Search for Artificial Stellar
+Sources of Infrared Radiation,'' Science 131, 1667--1668.
+\href{https://doi.org/10.1126/science.131.3414.1667}{doi:10.1126/science.131.3414.1667}.
+\bibitem{Wright2014} J. T. Wright et al. (2014), ``The $\hat G$ Infrared
+Search for Extraterrestrial Civilizations with Large Energy Supplies.
+I. Background and Justification,'' ApJ 792, 26.
+\href{https://doi.org/10.1088/0004-637X/792/1/26}{doi:10.1088/0004-637X/792/1/26}.
+\bibitem{Smart2012} J. M. Smart (2012), ``The Transcension Hypothesis:
+Sufficiently Advanced Civilizations Invariably Leave Our Universe, and
+Implications for METI and SETI,'' Acta Astronautica 78, 55--68.
+\href{https://doi.org/10.1016/j.actaastro.2011.11.010}{doi:10.1016/j.actaastro.2011.11.010}.
+\bibitem{Landauer1961} R. Landauer (1961), ``Irreversibility and Heat
+Generation in the Computing Process,'' IBM J. Res. Dev. 5, 183--191.
+\href{https://doi.org/10.1147/rd.53.0183}{doi:10.1147/rd.53.0183}.
+\bibitem{Bennett1973} C. H. Bennett (1973), ``Logical Reversibility of
+Computation,'' IBM J. Res. Dev. 17, 525--532.
+\href{https://doi.org/10.1147/rd.176.0525}{doi:10.1147/rd.176.0525}.
+\bibitem{Margolus1998} N. Margolus and L. B. Levitin (1998), ``The Maximum
+Speed of Dynamical Evolution,'' Physica D 120, 188--195.
+\href{https://doi.org/10.1016/S0167-2789(98)00054-2}{doi:10.1016/S0167-2789(98)00054-2}.
+\bibitem{Hildebrand1983} R. H. Hildebrand (1983), ``The Determination of
+Cloud Masses and Dust Characteristics from Submillimetre Thermal
+Emission,'' QJRAS 24, 267--282.
+\bibitem{Nguyen2010} H. T. Nguyen et al. (2010), ``HerMES: The SPIRE
+confusion limit,'' A\&A 518, L5.
+\href{https://arxiv.org/abs/1005.2207}{arXiv:1005.2207}.
+\bibitem{Ciesla2025} L. Ciesla et al. (2025), ``PRIMA: PRIMAger, a
+far-infrared hyperspectral and polarimetric instrument.''
+\href{https://arxiv.org/abs/2509.01727}{arXiv:2509.01727}, version 1.
+\bibitem{Donnellan2024} J. M. S. Donnellan et al. (2024), ``Overcoming
+confusion noise with hyperspectral imaging from PRIMAger,'' MNRAS 532,
+1966--1979.
+\href{https://doi.org/10.1093/mnras/stae1539}{doi:10.1093/mnras/stae1539}.
+\bibitem{NASA2026} NASA (23 September 2026),
+\href{https://www.nasa.gov/news-release/nasa-selects-far-infrared-telescope-as-first-in-new-mission-class/}{``NASA Selects Far-Infrared Telescope as First in New Mission Class.''}
+Accessed 27 September 2026.
+\bibitem{ALMAcalculator} ALMA Science Portal,
+\href{https://almascience.nrao.edu/proposing/sensitivity-calculator}{``Sensitivity Calculator'' and parameter documentation.}
+Accessed 27 September 2026.
+\bibitem{Fixsen1996} D. J. Fixsen et al. (1996), ``The Cosmic Microwave
+Background Spectrum from the Full COBE FIRAS Data Set,'' ApJ 473, 576.
+\href{https://doi.org/10.1086/178173}{doi:10.1086/178173};
+\href{https://arxiv.org/abs/astro-ph/9605054}{arXiv:astro-ph/9605054}.
+\end{thebibliography}
 \end{document}

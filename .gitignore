@@ -9,3 +9,6 @@ paper/*.bbl
 paper/*.blg
 paper/*.synctex.gz
 *.zip
+paper/*.pdf
+paper/*.fls
+paper/*.fdb_latexmk

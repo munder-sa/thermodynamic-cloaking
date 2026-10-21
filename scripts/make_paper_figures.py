@@ -1,103 +1,85 @@
+"""Reproducible spectra, numerical tables and CONDITIONAL budget diagram.
+
+No hard-coded PRIMA/ALMA detection promises. Figure 3 uses a declared,
+illustrative total RMS of 10 microJy and an assumed luminosity budget.
+Neither is an observed exclusion. Data accompany each figure.
+"""
+from pathlib import Path
+import csv
+import json
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from physics import (flux_ujy, waste_power, radiator_area, spectral_index,
+                     detection_horizon, illustrative_fraction_limit, AU,
+                     L_TIR_MW, N_STARS_MW)
 
-plt.rcParams.update({
-    "font.family": "serif",
-    "font.size": 10,
-    "axes.labelsize": 11,
-    "axes.titlesize": 11,
-    "xtick.labelsize": 9,
-    "ytick.labelsize": 9,
-    "legend.fontsize": 8.5,
-    "mathtext.fontset": "cm",
-    "pdf.fonttype": 42,
-})
+ROOT = Path(__file__).resolve().parents[1]
 
-K_B = 1.380649e-23
-H = 6.62607015e-34
-C = 2.99792458e8
-SIGMA = 5.670374419e-8
-PC_TO_M = 3.085677581e16
-JY_TO_W_M2_HZ = 1e-26
-L_SUN = 3.828e26
-N_STARS_MW = 1.0e11
-L_TIR_MW = 1.0e10 * L_SUN
 
-def planck_b_nu(nu, T):
-    x = (H * nu) / (K_B * T)
-    x = np.clip(x, 1e-10, 700.0)
-    return (2.0 * H * (nu**3) / (C**2)) / (np.expm1(x))
+def save(fig, name):
+    for extension in ('png', 'pdf'):
+        fig.savefig(ROOT / 'figures' / f'{name}.{extension}', dpi=180, bbox_inches='tight')
+    plt.close(fig)
 
-def make_figure_spectra():
-    wavelengths_um = np.logspace(0.5, 3.5, 600)
-    nu = C / (wavelengths_um * 1e-6)
-    d_m = 10.0 * PC_TO_M
 
-    def get_flux(T):
-        P_waste = 1e40 * K_B * T * np.log(2)
-        A_rad = P_waste / (SIGMA * (T**4))
-        B_nu = planck_b_nu(nu, T)
-        return ((A_rad / (4.0 * d_m**2)) * B_nu / JY_TO_W_M2_HZ) * 1e6
+def main():
+    for folder in ('figures', 'results'):
+        (ROOT / folder).mkdir(exist_ok=True)
+    waves = [28, 92, 100, 126, 183, 235, 450, 850, 1300, 3000]
+    with (ROOT / 'results' / 'flux_table.csv').open('w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['wavelength_um', '10K_ujy', '15K_ujy', '30K_ujy'])
+        for w in waves:
+            writer.writerow([w] + [float(flux_ujy(w, t)) for t in (10, 15, 30)])
+    numbers = {
+        'baseline': {'I_dot_bits_per_s': 1e40, 'd_pc': 10, 'eta': 1, 'T_bg_K': 0},
+        'temperatures': {str(t): dict(power_W=float(waste_power(T_bath=t)),
+                                      area_m2=float(radiator_area(t)),
+                                      disk_one_face_radius_AU=float(np.sqrt(radiator_area(t)/np.pi)/AU),
+                                      spherical_radius_AU=float(np.sqrt(radiator_area(t)/(4*np.pi))/AU),
+                                      alpha_450_850=spectral_index(t),
+                                      peak_Snu_wavelength_um=5099.4428295/t)
+                         for t in (10, 15, 30)},
+        'dust_15K_beta1.7_alpha_450_850': spectral_index(15, beta=1.7),
+        'conditional_budget': {'epsilon': .001, 'f': .14, 'T_K': 15,
+                               'L_excess_W': float(.14*N_STARS_MW*waste_power(T_bath=15)),
+                               'I_dot_max': float(.001*L_TIR_MW/(.14*N_STARS_MW*waste_power(1.,15)))},
+        'equal_SNR_for_sigma_alpha_0.15': float(np.sqrt(2)/(.15*np.log(850/450))),
+        'conditional_dmax_pc_rms10_snr5': {f'{t}K_{w}um': float(detection_horizon(w,t,10))
+                                         for t in (10,15,30) for w in (100,183,235,450,850)}
+    }
+    (ROOT / 'results' / 'numerical_summary.json').write_text(json.dumps(numbers, indent=2)+'\n')
+    wavelengths = np.geomspace(20, 3500, 800)
+    fig, ax = plt.subplots(figsize=(8,5), layout='constrained')
+    for t, color in [(10,'#2874a6'), (15,'#218c74'), (30,'#8e44ad')]:
+        ax.loglog(wavelengths, flux_ujy(wavelengths,t), label=f'{t} K blackbody', color=color)
+    # Normalize the illustrative dust template at a stated wavelength, not its sampled maximum.
+    dust = flux_ujy(wavelengths,15) * (850/wavelengths)**1.7
+    dust *= flux_ujy(850,10)/flux_ujy(850,15)
+    ax.loglog(wavelengths,dust,ls='--',color='#777777',label='15 K dust, beta=1.7; matched at 850 um')
+    ax.scatter([92,126,183,235], flux_ujy([92,126,183,235],10), color='#2874a6',s=25,label='PRIMAger nominal band centers (2025)')
+    ax.scatter([250,350,500], [5800,6300,6800], marker='x',color='#c0392b',label='SPIRE 1-sigma confusion (Nguyen et al. 2010)')
+    ax.set(xlim=(20,3500),ylim=(.01,2e4),xlabel='Wavelength (micrometers)',ylabel='Flux density (microJy)',title='Model fluxes: 10^40 erased bits/s, 10 pc, eta=1')
+    ax.legend(fontsize=8,loc='upper left',bbox_to_anchor=(1.02,1))
+    ax.grid(alpha=.2,which='both')
+    save(fig, 'fig2_spectra')
+    rates = np.geomspace(1e38,1e47,500)
+    limit = illustrative_fraction_limit(rates)
+    fig, ax = plt.subplots(figsize=(8,5),layout='constrained')
+    ax.loglog(rates,limit,color='#c0392b',label='Assumed budget: 0.001 x 10^10 solar luminosities')
+    ax.fill_between(rates, limit, 1, where=limit<1, color='#c0392b',alpha=.1,label='Above assumed budget; NOT an empirical exclusion')
+    for w,color in [(235,'#218c74'),(850,'#8e44ad')]:
+        threshold = 1e40 * 5 * 10 / float(flux_ujy(w,15))
+        ax.axvline(threshold,color=color,ls='--',label=f'{w} um: conditional 5-sigma, RMS=10 microJy')
+    ax.scatter([1e40],[.14],color='#2874a6',label='Illustrative f=0.14 (not calibrated to stars)')
+    ax.set(xlim=(1e38,1e47),ylim=(1e-4,1),xlabel='Irreversible erasure rate (bits/s)',ylabel='Assumed occupied stellar fraction',title='Conditional luminosity budget and detection thresholds: 15 K')
+    ax.legend(fontsize=8,loc='lower left')
+    ax.grid(alpha=.2,which='both')
+    save(fig,'fig3_conditional_budget')
+    print(json.dumps(numbers,indent=2))
 
-    flux_10k = get_flux(10.0)
-    flux_30k = get_flux(30.0)
-    raw_dust = (nu**1.7) * planck_b_nu(nu, 15.0)
-    flux_dust = (raw_dust / np.max(raw_dust)) * np.max(flux_10k)
 
-    fig, ax = plt.subplots(figsize=(6.8, 4.2))
-    ax.axvspan(5.0, 28.0, color="#f0883e", alpha=0.08, label="JWST/MIRI")
-    ax.axvspan(25.0, 250.0, color="#3fb950", alpha=0.08, label="Far-IR Gap (PRIMA)")
-    ax.axvspan(350.0, 3000.0, color="#d29922", alpha=0.08, label="ALMA Band")
-
-    ax.plot(wavelengths_um, flux_10k, color="#1f77b4", lw=2.0, label=r"Inward Node ($10\ \mathrm{K},\ \beta=0$)")
-    ax.plot(wavelengths_um, flux_30k, color="#9467bd", lw=1.8, ls="--", label=r"Inward Node ($30\ \mathrm{K},\ \beta=0$)")
-    ax.plot(wavelengths_um, flux_dust, color="#2ca02c", lw=1.8, ls="-.", label=r"Cold Dust ($15\ \mathrm{K},\ \beta=1.7$)")
-
-    ax.plot([5.6, 7.7, 10.0, 15.0, 21.0, 25.5], [1.5, 2.5, 4.0, 10.0, 30.0, 70.0], "o-", color="#e6550d", lw=1.8, markersize=4, label=r"JWST/MIRI (10k-sec, $10\sigma$)")
-    ax.plot([70.0, 100.0, 160.0, 250.0, 350.0, 500.0], [4000.0, 4500.0, 7000.0, 6000.0, 7000.0, 8000.0], "x--", color="#d62728", lw=1.5, markersize=5, label="Herschel (PACS/SPIRE Archive)")
-    ax.plot([25.0, 40.0, 70.0, 100.0, 150.0, 200.0], [25.0, 15.0, 10.0, 12.0, 18.0, 25.0], "*-", color="#2ca02c", lw=1.8, markersize=6, label="PRIMA (Future Probe Goal)")
-    ax.plot([450.0, 850.0, 1300.0, 3000.0], [1000.0, 200.0, 100.0, 50.0], "s-", color="#bc6b00", lw=1.8, markersize=4, label=r"ALMA (1-hr, $10\sigma$)")
-
-    ax.set_xscale("log")
-    ax.set_yscale("log")
-    ax.set_xlim(3.0, 3200.0)
-    ax.set_ylim(1e-1, 5e5)
-    ax.set_xlabel(r"Wavelength $\lambda\ [\mu\mathrm{m}]$")
-    ax.set_ylabel(r"Flux Density $S_\nu\ [\mu\mathrm{Jy}]\ (d = 10\ \mathrm{pc})$")
-    ax.grid(True, which="both", ls=":", alpha=0.4)
-    ax.legend(loc="upper right", frameon=True, framealpha=0.9)
-    plt.tight_layout()
-    plt.savefig("figures/fig2_spectra.pdf", bbox_inches="tight"); plt.savefig("figures/fig2_spectra.png", dpi=300, bbox_inches="tight")
-    print("Saved: figures/fig2_spectra.pdf")
-
-def make_figure_exclusion():
-    log_I_dot = np.linspace(25, 45, 400)
-    I_dot = 10.0**log_I_dot
-    P_waste = I_dot * K_B * 15.0 * np.log(2)
-    f_cobe = np.clip((0.001 * L_TIR_MW) / (N_STARS_MW * P_waste), 1e-6, 1.0)
-
-    fig, ax = plt.subplots(figsize=(6.5, 4.2))
-    ax.fill_between(log_I_dot, f_cobe, 1.0, color="#d62728", alpha=0.2, label="Excluded by COBE/FIRAS (Diffuse IR)")
-    ax.plot(log_I_dot, f_cobe, color="#d62728", lw=2.0)
-    ax.axvline(x=np.log10(2.5e38), color="#2ca02c", lw=1.8, ls="--", label=r"PRIMA Discovery Limit ($d \leq 10\ \mathrm{pc}$)")
-    ax.axvline(x=np.log10(1.2e40), color="#bc6b00", lw=1.8, ls=":", label=r"ALMA Sensitivity Limit ($d \leq 10\ \mathrm{pc}$)")
-    ax.axhline(y=0.14, color="#1f77b4", lw=2.0, ls="-.", label=r"Steady-State Occupancy ($f_{\mathrm{intro}} \approx 14\%$)")
-    ax.scatter([40], [0.14], color="#1f77b4", s=90, edgecolors="black", zorder=5)
-    ax.text(37.0, 0.18, r"Simulated Node ($\dot{I}=10^{40},\ f=14\%$)", color="#1f77b4", weight="bold")
-    ax.scatter([25], [1.0 / N_STARS_MW], color="#2ca02c", s=70, edgecolors="black", zorder=5)
-    ax.text(25.3, 1.5e-6, "Earth (2026)", color="#2ca02c")
-
-    ax.set_yscale("log")
-    ax.set_xlim(25, 45)
-    ax.set_ylim(1e-6, 1.0)
-    ax.set_xlabel(r"Computational Capacity per Node $\log_{10}(\dot{I})\ [\mathrm{bits\ s^{-1}}]$")
-    ax.set_ylabel(r"Galactic Inward Occupancy Fraction $f_{\mathrm{civ}}$")
-    ax.grid(True, which="both", ls=":", alpha=0.4)
-    ax.legend(loc="lower left", frameon=True, framealpha=0.9)
-    plt.tight_layout()
-    plt.savefig("figures/fig3_exclusion.pdf", bbox_inches="tight"); plt.savefig("figures/fig3_exclusion.png", dpi=300, bbox_inches="tight")
-    print("Saved: figures/fig3_exclusion.pdf")
-
-if __name__ == "__main__":
-    make_figure_spectra()
-    make_figure_exclusion()
+if __name__ == '__main__':
+    main()

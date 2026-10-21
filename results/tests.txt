@@ -1,3 +1,8 @@
+test_absorbing_empty_and_constant_spatial_covariance (test_async.AsyncTests.test_absorbing_empty_and_constant_spatial_covariance) ... ok
+test_compare_naive_random_selection_distribution (test_async.AsyncTests.test_compare_naive_random_selection_distribution) ... ok
+test_exact_finite_selection_two_state_expectation (test_async.AsyncTests.test_exact_finite_selection_two_state_expectation) ... ok
+test_joint_launch_and_death (test_async.AsyncTests.test_joint_launch_and_death) ... ok
+test_pool_integrity_and_reproducibility (test_async.AsyncTests.test_pool_integrity_and_reproducibility) ... ok
 test_birth_before_parent_death_and_no_same_step_cascade (test_models.DynamicsTests.test_birth_before_parent_death_and_no_same_step_cascade) ... ok
 test_conflict_kills_both_expansionists (test_models.DynamicsTests.test_conflict_kills_both_expansionists) ... ok
 test_conflict_resolution_independent_of_order (test_models.DynamicsTests.test_conflict_resolution_independent_of_order) ... ok
@@ -15,6 +20,6 @@ test_spectral_slope (test_models.PhysicsTests.test_spectral_slope) ... ok
 test_wien_and_rj_limits (test_models.PhysicsTests.test_wien_and_rj_limits) ... ok
 
 ----------------------------------------------------------------------
-Ran 15 tests in 0.104s
+Ran 20 tests in 1.262s
 
 OK

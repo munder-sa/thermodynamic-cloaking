@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this model or code, please cite it as below."
+title: "Thermodynamic Cloaking of Inward Civilizations: An Illustrative Population Model and Far-Infrared/Submillimeter Forecasts"
+authors:
+  - family-names: Yamashita
+    given-names: S
+    email: munder.sa@gmail.com
+version: "3.0"
+date-released: 2026-10-21
+license: MIT
+repository-code: "https://github.com/munder-sa/thermodynamic-cloaking"
